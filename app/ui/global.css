@@ -35,3 +35,45 @@ body {
     filter: drop-shadow(0 0 8px rgba(0, 255, 102, 0.7));
   }
 }
+
+/* Modificador de Interfaz Estilo Game Boy Vintage de 8 Bits */
+.retro-mode {
+  /* Forzamos un filtrado de pixelación y paleta monocromática verdosa retro */
+  filter: contrast(130%) saturate(40%) sepia(80%) hue-rotate(60deg);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.retro-mode body {
+  background-color: #2b3a1a !important; /* Verde oliva clásico de Game Boy */
+}
+
+/* Redefinición semántica de los acentos neón a bajo nivel */
+.retro-mode .text-cyber-neon {
+  color: #8bac0f !important; /* Tono de pixel verde brillante */
+}
+
+.retro-mode .bg-cyber-neon {
+  background-color: #8bac0f !important;
+}
+
+.retro-mode .border-cyber-border {
+  border-color: #306230 !important;
+}
+
+.retro-mode .bg-cyber-card {
+  background-color: #0f380f !important;
+}
+
+/* Efecto scanline intermitente para emular pantalla de tubo CRT */
+.retro-mode::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 99999;
+  opacity: 0.4;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
