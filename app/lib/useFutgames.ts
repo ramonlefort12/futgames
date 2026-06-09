@@ -20,7 +20,7 @@ export const FORMATIONS = {
 };
 
 export type FormationType = keyof typeof FORMATIONS;
-export type TournamentStage = 'GRUPO_J1' | 'GRUPO_J2' | 'GRUPO_J3' | 'OCTAVOS' | 'CUARTOS' | 'SEMIS' | 'FINAL';
+export type TournamentStage = 'GRUPO J1' | 'GRUPO J2' | 'GRUPO J3' | 'OCTAVOS' | 'CUARTOS' | 'SEMIS' | 'FINAL';
 
 export interface GroupTeamState { name: string; rating: number; points: number; gf: number; gc: number; }
 export interface PlayoffBracket {
@@ -48,7 +48,7 @@ export function useFutgames() {
   const [view, setView] = useState<'PLAY' | 'TOURNAMENT_BRACKET'>('PLAY');
   const [userRating, setUserRating] = useState<number>(0);
   const [matchesLog, setMatchesLog] = useState<MatchSimulation[]>([]);
-  const [tournamentStage, setTournamentStage] = useState<TournamentStage>('GRUPO_J1');
+  const [tournamentStage, setTournamentStage] = useState<TournamentStage>('GRUPO J1');
   const [tournamentStatus, setTournamentStatus] = useState<'PLAYING' | 'CHAMPION' | 'ELIMINATED'>('PLAYING');
   const [groupTeams, setGroupTeams] = useState<GroupTeamState[]>([]);
   const [bracket, setBracket] = useState<PlayoffBracket | null>(null);
@@ -92,7 +92,7 @@ export function useFutgames() {
     ];
     setGroupTeams(initialGroup);
     setBracket(null);
-    setTournamentStage('GRUPO_J1');
+    setTournamentStage('GRUPO J1');
     setTournamentStatus('PLAYING');
     setMatchesLog([]);
     setView('TOURNAMENT_BRACKET');
@@ -156,11 +156,11 @@ export function useFutgames() {
   };
 
   const handleNextRonda = () => {
-    if (tournamentStage.startsWith('GRUPO_J')) {
+    if (tournamentStage.startsWith('GRUPO J')) {
       let rivalName = '';
-      if (tournamentStage === 'GRUPO_J1') rivalName = groupTeams[1]?.name;
-      if (tournamentStage === 'GRUPO_J2') rivalName = groupTeams[2]?.name;
-      if (tournamentStage === 'GRUPO_J3') rivalName = groupTeams[3]?.name;
+      if (tournamentStage === 'GRUPO J1') rivalName = groupTeams[1]?.name;
+      if (tournamentStage === 'GRUPO J2') rivalName = groupTeams[2]?.name;
+      if (tournamentStage === 'GRUPO J3') rivalName = groupTeams[3]?.name;
 
       const rivalObj = groupTeams.find(t => t.name === rivalName);
       const userMatch = simulateMatch(userRating, rivalObj?.rating || 80, userTeamNameLabel, rivalName, true);
@@ -183,9 +183,9 @@ export function useFutgames() {
         return updated.sort((a, b) => b.points - a.points || (b.gf - b.gc) - (a.gf - a.gc) || b.gf - a.gf);
       });
 
-      if (tournamentStage === 'GRUPO_J1') setTournamentStage('GRUPO_J2');
-      else if (tournamentStage === 'GRUPO_J2') setTournamentStage('GRUPO_J3');
-      else if (tournamentStage === 'GRUPO_J3') {
+      if (tournamentStage === 'GRUPO J1') setTournamentStage('GRUPO J2');
+      else if (tournamentStage === 'GRUPO J2') setTournamentStage('GRUPO J3');
+      else if (tournamentStage === 'GRUPO J3') {
         setGroupTeams(currentSorted => {
           if (currentSorted.findIndex(t => t.name === userTeamNameLabel) <= 1) {
             setTournamentStage('OCTAVOS'); generateGlobalBracket(userTeamNameLabel);
