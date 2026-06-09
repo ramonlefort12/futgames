@@ -1,88 +1,84 @@
-// This file contains type definitions for your data.
-// It describes the shape of the data, and what data type each property should accept.
-// For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
-export type User = {
+/**
+ * Posiciones tácticas válidas en el terreno de juego.
+ * Restringido por tipado para evitar strings arbitrarios.
+ */
+export type Position = 'POR' | 'LI' | 'DFC' | 'LD' | 'MCO' | 'MC' | 'MCD' | 'EI' | 'ED' | 'DC';
+
+/**
+ * Rarezas/Categorías disponibles para los cromos de los jugadores.
+ * Determina el diseño visual CSS y los modificadores de probabilidad.
+ */
+export type PlayerRarity = 'COMMON' | 'SILVER' | 'GOLD' | 'LEGEND' | 'MEME';
+
+/**
+ * Modelo estricto para una Selección Nacional (País).
+ */
+export interface Country {
+  id: string;          // Código ISO o slug único (ej: 'arg', 'bra', 'esp')
+  name: string;        // Nombre de la selección (ej: 'Argentina')
+  flagUrl: string;     // Ruta local al SVG de la bandera en /public
+  titlesCount: number; // Copas del Mundo ganadas (para la persistencia global)
+}
+
+/**
+ * Modelo estricto para la entidad de un Jugador.
+ */
+export interface Player {
+  id: string;          // ID único del futbolista (ej: 'messi-2026')
+  name: string;        // Nombre comercial (ej: 'L. Messi')
+  countryId: string;   // Relación directa con el ID de la Selección (Country)
+  position: Position;  // Posición natural del jugador
+  rating: number;      // Puntuación general (0 - 99)
+  rarity: PlayerRarity;// Tipo de cromo para renderizado UI
+  imageUrl?: string;   // Opcional: Silueta vectorial o foto comprimida
+}
+
+/**
+ * Estado dinámico de una posición individual dentro del Once Titular del usuario.
+ */
+export interface GridPositionState {
+  position: Position;   // Posición del campo (ej: 'DC')
+  assignedCountry: Country | null; // País sorteado aleatoriamente para este slot
+  selectedPlayer: Player | null;   // Jugador elegido por el usuario de ese país
+  isLocked: boolean;    // Bloqueado una vez que el usuario confirma su elección
+}
+
+/**
+ * Estado global de una sesión/partida del Torneo de Futgames.
+ * Ideal para manejar el estado centralizado (React Context / useReducer).
+ */
+export interface TournamentGameState {
+  id: string;               // ID único de la sesión de juego
+  currentStep: 'START' | 'DRAFT' | 'SIMULATION' | 'RESULTS';
+  userSelectionId: string | null; // Selección que el usuario eligió defender al inicio
+  lineup: Record<Position, GridPositionState>; // Tu 11 ideal estructurado
+  tournamentBracket: {
+    quarters: MatchSimulation[];
+    semis: MatchSimulation[];
+    final: MatchSimulation[];
+  } | null;
+  hasWon: boolean | null;   // Resultado de la final
+}
+
+/**
+ * Estructura de datos para la resolución matemática de un partido.
+ */
+export interface MatchSimulation {
   id: string;
-  name: string;
-  email: string;
-  password: string;
-};
+  homeTeamName: string;
+  awayTeamName: string;
+  homeScore: number;
+  awayScore: number;
+  isCompleted: boolean;
+  winnerName: string;
+}
 
-export type Customer = {
-  id: string;
-  name: string;
-  email: string;
-  image_url: string;
-};
-
-export type Invoice = {
-  id: string;
-  customer_id: string;
-  amount: number;
-  date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
-};
-
-export type Revenue = {
-  month: string;
-  revenue: number;
-};
-
-export type LatestInvoice = {
-  id: string;
-  name: string;
-  image_url: string;
-  email: string;
-  amount: string;
-};
-
-// The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
-  amount: number;
-};
-
-export type InvoicesTable = {
-  id: string;
-  customer_id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  date: string;
-  amount: number;
-  status: 'pending' | 'paid';
-};
-
-export type CustomersTableType = {
-  id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  total_invoices: number;
-  total_pending: number;
-  total_paid: number;
-};
-
-export type FormattedCustomersTable = {
-  id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
-};
-
-export type CustomerField = {
-  id: string;
-  name: string;
-};
-
-export type InvoiceForm = {
-  id: string;
-  customer_id: string;
-  amount: number;
-  status: 'pending' | 'paid';
-};
+/**
+ * Modelo para el minijuego diario "Immaculate Grid" (Cuadrícula 3x3).
+ */
+export interface DailyGridChallenge {
+  date: string; // Formato YYYY-MM-DD para control diario
+  rows: { type: 'COUNTRY' | 'CLUB'; value: string }[]; // Criterios de filas (ej: España, Real Madrid)
+  cols: { type: 'COUNTRY' | 'CLUB' | 'STAT'; value: string }[]; // Criterios de columnas (ej: Brasil, +100 goles)
+  matrixAnswers: Record<string, string[]>; // IDs de respuestas válidas por cada celda [row_index, col_index]
+}

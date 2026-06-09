@@ -8,25 +8,34 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        // Identidad Visual Cyber-Pitch de Futgames
+        cyber: {
+          bg: '#0D1117',       // Negro slate profundo para el fondo principal
+          card: '#161B22',     // Gris oscuro contenedor para cromos y módulos
+          border: '#21262D',   // Gris de contraste limpio para bordes sutiles
+          neon: '#00FF66',     // Verde Neón para CTAs, botones y resaltados
+          glow: '#0575E6',     // Azul eléctrico para degradados de cartas leyendas
+        },
+        // Mapeo semántico de rarezas para los cromos deportivos
+        rarity: {
+          common: '#8B949E',
+          silver: '#8E9EAB',
+          gold: '#F5AF19',
+          legend: '#00FF66',
+          meme: '#FF0055',
+        }
+      },
       gridTemplateColumns: {
         '13': 'repeat(13, minmax(0, 1fr))',
       },
-      colors: {
-        blue: {
-          400: '#2589FE',
-          500: '#0070F3',
-          600: '#2F6FEB',
-        },
-      },
-    },
-    keyframes: {
-      shimmer: {
-        '100%': {
-          transform: 'translateX(100%)',
-        },
+      fontFamily: {
+        // Mapeamos nuestra clase personalizada a la variable CSS inyectada en el HTML
+        sports: ['var(--font-syne)', 'sans-serif'],
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [],
 };
+
 export default config;

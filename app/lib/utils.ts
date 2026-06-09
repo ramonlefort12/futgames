@@ -1,69 +1,38 @@
-import { Revenue } from './definitions';
+// app/lib/utils.ts
 
-export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-};
+import { Country } from './definitions';
+import { countriesData } from './placeholder-data';
 
-export const formatDateToLocal = (
-  dateStr: string,
-  locale: string = 'en-US',
-) => {
-  const date = new Date(dateStr);
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  const formatter = new Intl.DateTimeFormat(locale, options);
-  return formatter.format(date);
-};
+/**
+ * Obtiene un array de 11 selecciones nacionales únicas y aleatorias.
+ * Utiliza el algoritmo de Fisher-Yates Shuffle para garantizar una 
+ * distribución uniforme y óptima en tiempo O(N).
+ * * @returns Array con 11 objetos de tipo Country completamente aleatorios y distintos.
+ */
+export function generateRandomCountriesForDraft(): Country[] {
+  // 1. Transformamos nuestro diccionario indexado en un array de trabajo
+  const allCountries = Object.values(countriesData);
+  const totalCountries = allCountries.length;
 
-export const generateYAxis = (revenue: Revenue[]) => {
-  // Calculate what labels we need to display on the y-axis
-  // based on highest record and in 1000s
-  const yAxisLabels = [];
-  const highestRecord = Math.max(...revenue.map((month) => month.revenue));
-  const topLabel = Math.ceil(highestRecord / 1000) * 1000;
-
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`);
+  // Control de aserción técnica preventiva
+  if (totalCountries < 11) {
+    throw new Error(
+      `Fallo de consistencia: Se requieren mínimo 11 selecciones en el dataset y solo hay ${totalCountries}.`
+    );
   }
 
-  return { yAxisLabels, topLabel };
-};
+  // 2. Aplicamos Fisher-Yates parcial (solo barajamos los primeros 11 elementos)
+  // Esto reduce operaciones innecesarias si el dataset crece a 100+ países.
+  for (let i = 0; i < 11; i++) {
+    // Generar un índice aleatorio entre el elemento actual 'i' y el final del array
+    const randomIndex = Math.floor(Math.random() * (totalCountries - i)) + i;
 
-export const generatePagination = (currentPage: number, totalPages: number) => {
-  // If the total number of pages is 7 or less,
-  // display all pages without any ellipsis.
-  if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
+    // Intercambio de posiciones (Swap) en la memoria del array
+    const temp = allCountries[i];
+    allCountries[i] = allCountries[randomIndex];
+    allCountries[randomIndex] = temp;
   }
 
-  // If the current page is among the first 3 pages,
-  // show the first 3, an ellipsis, and the last 2 pages.
-  if (currentPage <= 3) {
-    return [1, 2, 3, '...', totalPages - 1, totalPages];
-  }
-
-  // If the current page is among the last 3 pages,
-  // show the first 2, an ellipsis, and the last 3 pages.
-  if (currentPage >= totalPages - 2) {
-    return [1, 2, '...', totalPages - 2, totalPages - 1, totalPages];
-  }
-
-  // If the current page is somewhere in the middle,
-  // show the first page, an ellipsis, the current page and its neighbors,
-  // another ellipsis, and the last page.
-  return [
-    1,
-    '...',
-    currentPage - 1,
-    currentPage,
-    currentPage + 1,
-    '...',
-    totalPages,
-  ];
-};
+  // 3. Extraemos exactamente los primeros 11 países ya barajados de forma única
+  return allCountries.slice(0, 11);
+}

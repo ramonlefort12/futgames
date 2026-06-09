@@ -1,147 +1,286 @@
-// This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
-// https://nextjs.org/learn/dashboard-app/fetching-data
-const users = [
-  {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
-    email: 'user@nextmail.com',
-    password: '123456',
-  },
+// app/lib/placeholder-data.ts
+import { Country, Player, Position } from './definitions';
+
+/**
+ * Diccionario indexado de Selecciones Nacionales (Countries).
+ * Clave: ID de la selección (slug de 3 caracteres).
+ */
+export const countriesData: Record<string, Country> = {
+  bra: { id: 'bra', name: 'Brasil', flagUrl: '/flags/bra.svg', titlesCount: 5 },
+  deu: { id: 'deu', name: 'Alemania', flagUrl: '/flags/deu.svg', titlesCount: 4 },
+  ita: { id: 'ita', name: 'Italia', flagUrl: '/flags/ita.svg', titlesCount: 4 },
+  arg: { id: 'arg', name: 'Argentina', flagUrl: '/flags/arg.svg', titlesCount: 3 },
+  fra: { id: 'fra', name: 'Francia', flagUrl: '/flags/fra.svg', titlesCount: 2 },
+  uru: { id: 'uru', name: 'Uruguay', flagUrl: '/flags/uru.svg', titlesCount: 2 },
+  esp: { id: 'esp', name: 'España', flagUrl: '/flags/esp.svg', titlesCount: 1 },
+  eng: { id: 'eng', name: 'Inglaterra', flagUrl: '/flags/eng.svg', titlesCount: 1 },
+
+  // Finalistas y selecciones históricas
+  nld: { id: 'nld', name: 'Países Bajos', flagUrl: '/flags/nld.svg', titlesCount: 0 },
+  hrv: { id: 'hrv', name: 'Croacia', flagUrl: '/flags/hrv.svg', titlesCount: 0 },
+  prt: { id: 'prt', name: 'Portugal', flagUrl: '/flags/prt.svg', titlesCount: 0 },
+  mar: { id: 'mar', name: 'Marruecos', flagUrl: '/flags/mar.svg', titlesCount: 0 },
+  bel: { id: 'bel', name: 'Bélgica', flagUrl: '/flags/bel.svg', titlesCount: 0 },
+};
+
+/**
+ * Lista optimizada de Jugadores de Élite y de Leyenda.
+ * Mapeados estrictamente mediante countryId.
+ */
+export const playersData: Player[] = [
+  // --- ESPAÑA ---
+  { id: 'p-casillas', name: 'Iker Casillas', countryId: 'esp', position: 'POR', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-rodri', name: 'Rodri Hernández', countryId: 'esp', position: 'MCD', rating: 91, rarity: 'GOLD' },
+  { id: 'p-iniesta', name: 'Andrés Iniesta', countryId: 'esp', position: 'MC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-yamal', name: 'Lamine Yamal', countryId: 'esp', position: 'ED', rating: 86, rarity: 'GOLD' },
+  { id: 'p-pique', name: 'Gerard Piqué', countryId: 'esp', position: 'DFC', rating: 87, rarity: 'SILVER' },
+  { id: 'p-xavi', name: 'Xavi Hernández', countryId: 'esp', position: 'MC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-sergioramos', name: 'Sergio Ramos', countryId: 'esp', position: 'DFC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-puyol', name: 'Carles Puyol', countryId: 'esp', position: 'DFC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-villa', name: 'David Villa', countryId: 'esp', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-torres', name: 'Fernando Torres', countryId: 'esp', position: 'DC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-raul', name: 'Raúl González', countryId: 'esp', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-busquets', name: 'Sergio Busquets', countryId: 'esp', position: 'MCD', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-alonso', name: 'Xabi Alonso', countryId: 'esp', position: 'MC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-silva', name: 'David Silva', countryId: 'esp', position: 'MCO', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-fabregas', name: 'Cesc Fàbregas', countryId: 'esp', position: 'MC', rating: 91, rarity: 'GOLD' },
+  { id: 'p-alba', name: 'Jordi Alba', countryId: 'esp', position: 'LI', rating: 88, rarity: 'GOLD' },
+  { id: 'p-carvajal', name: 'Dani Carvajal', countryId: 'esp', position: 'LD', rating: 89, rarity: 'GOLD' },
+
+  // --- BRASIL ---
+  { id: 'p-pele', name: 'Pelé', countryId: 'bra', position: 'DC', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-garrincha', name: 'Garrincha', countryId: 'bra', position: 'ED', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-jairzinho', name: 'Jairzinho', countryId: 'bra', position: 'ED', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-tostao', name: 'Tostão', countryId: 'bra', position: 'DC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-rivelino', name: 'Rivelino', countryId: 'bra', position: 'MCO', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-romario', name: 'Romário', countryId: 'bra', position: 'DC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-bebeto', name: 'Bebeto', countryId: 'bra', position: 'DC', rating: 91, rarity: 'GOLD' },
+  { id: 'p-r9', name: 'Ronaldo Nazário', countryId: 'bra', position: 'DC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-rivaldo', name: 'Rivaldo', countryId: 'bra', position: 'MCO', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-ronaldinho', name: 'Ronaldinho', countryId: 'bra', position: 'MCO', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-kaka', name: 'Kaká', countryId: 'bra', position: 'MCO', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-cafu', name: 'Cafú', countryId: 'bra', position: 'LD', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-robertocarlos', name: 'Roberto Carlos', countryId: 'bra', position: 'LI', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-thiagosilva', name: 'Thiago Silva', countryId: 'bra', position: 'DFC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-vini', name: 'Vinícius Jr.', countryId: 'bra', position: 'EI', rating: 91, rarity: 'GOLD' },
+  { id: 'p-zico', name: 'Zico', countryId: 'bra', position: 'MCO', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-socrates', name: 'Sócrates', countryId: 'bra', position: 'MC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-djalmasantos', name: 'Djalma Santos', countryId: 'bra', position: 'LD', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-niltonsantos', name: 'Nilton Santos', countryId: 'bra', position: 'LI', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-dida', name: 'Dida', countryId: 'bra', position: 'POR', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-neymar', name: 'Neymar Jr.', countryId: 'bra', position: 'EI', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-daniAlves', name: 'Dani Alves', countryId: 'bra', position: 'LD', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-lucio', name: 'Lúcio', countryId: 'bra', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-falcao', name: 'Paulo Roberto Falcão', countryId: 'bra', position: 'MC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-carlosalberto', name: 'Carlos Alberto Torres', countryId: 'bra', position: 'LD', rating: 97, rarity: 'LEGEND' },
+
+  // --- ARGENTINA ---
+  { id: 'p-maradona', name: 'Diego Maradona', countryId: 'arg', position: 'MCO', rating: 99, rarity: 'LEGEND' },
+  { id: 'p-messi', name: 'Lionel Messi', countryId: 'arg', position: 'ED', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-kempes', name: 'Mario Kempes', countryId: 'arg', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-passarella', name: 'Daniel Passarella', countryId: 'arg', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-burruchaga', name: 'Jorge Burruchaga', countryId: 'arg', position: 'MCO', rating: 90, rarity: 'GOLD' },
+  { id: 'p-caniggia', name: 'Claudio Caniggia', countryId: 'arg', position: 'ED', rating: 91, rarity: 'GOLD' },
+  { id: 'p-batistuta', name: 'Gabriel Batistuta', countryId: 'arg', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-riquelme', name: 'Juan Román Riquelme', countryId: 'arg', position: 'MCO', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-zanetti', name: 'Javier Zanetti', countryId: 'arg', position: 'LD', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-mascherano', name: 'Javier Mascherano', countryId: 'arg', position: 'MCD', rating: 91, rarity: 'GOLD' },
+  { id: 'p-dimaria', name: 'Ángel Di María', countryId: 'arg', position: 'ED', rating: 91, rarity: 'GOLD' },
+  { id: 'p-martinez', name: 'Emiliano Martínez', countryId: 'arg', position: 'POR', rating: 89, rarity: 'GOLD' },
+  { id: 'p-alvarez', name: 'Julián Álvarez', countryId: 'arg', position: 'DC', rating: 87, rarity: 'GOLD' },
+  { id: 'p-lautaro', name: 'Lautaro Martínez', countryId: 'arg', position: 'DC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-romero', name: 'Cuti Romero', countryId: 'arg', position: 'DFC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-redondo', name: 'Fernando Redondo', countryId: 'arg', position: 'MCD', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-ortega', name: 'Ariel Ortega', countryId: 'arg', position: 'MCO', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-fillol', name: 'Ubaldo Fillol', countryId: 'arg', position: 'POR', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-aimar', name: 'Pablo Aimar', countryId: 'arg', position: 'MCO', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-simeone', name: 'Diego Simeone', countryId: 'arg', position: 'MCD', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-tevez', name: 'Carlos Tévez', countryId: 'arg', position: 'DC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-veron', name: 'Juan Sebastián Verón', countryId: 'arg', position: 'MC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-crespo', name: 'Hernán Crespo', countryId: 'arg', position: 'DC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-sorin', name: 'Juan Pablo Sorín', countryId: 'arg', position: 'LI', rating: 90, rarity: 'GOLD' },
+  { id: 'p-ayala', name: 'Roberto Ayala', countryId: 'arg', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+
+  // --- ALEMANIA ---
+  { id: 'p-beckenbauer', name: 'Franz Beckenbauer', countryId: 'deu', position: 'DFC', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-gerdmuller', name: 'Gerd Müller', countryId: 'deu', position: 'DC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-seppmaier', name: 'Sepp Maier', countryId: 'deu', position: 'POR', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-rummenigge', name: 'Karl-Heinz Rummenigge', countryId: 'deu', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-matthaus', name: 'Lothar Matthäus', countryId: 'deu', position: 'MC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-klinsmann', name: 'Jürgen Klinsmann', countryId: 'deu', position: 'DC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-brehme', name: 'Andreas Brehme', countryId: 'deu', position: 'LI', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-kahn', name: 'Oliver Kahn', countryId: 'deu', position: 'POR', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-klose', name: 'Miroslav Klose', countryId: 'deu', position: 'DC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-lahm', name: 'Philipp Lahm', countryId: 'deu', position: 'LD', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-schweinsteiger', name: 'Bastian Schweinsteiger', countryId: 'deu', position: 'MC', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-neuer', name: 'Manuel Neuer', countryId: 'deu', position: 'POR', rating: 92, rarity: 'GOLD' },
+  { id: 'p-kroos', name: 'Toni Kroos', countryId: 'deu', position: 'MC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-thomasmuller', name: 'Thomas Müller', countryId: 'deu', position: 'DC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-musiala', name: 'Jamal Musiala', countryId: 'deu', position: 'MCO', rating: 88, rarity: 'GOLD' },
+  { id: 'p-netzer', name: 'Günter Netzer', countryId: 'deu', position: 'MC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-sammer', name: 'Matthias Sammer', countryId: 'deu', position: 'DFC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-breitner', name: 'Paul Breitner', countryId: 'deu', position: 'MC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-ballack', name: 'Michael Ballack', countryId: 'deu', position: 'MC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-ozil', name: 'Mesut Özil', countryId: 'deu', position: 'MCO', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-hummels', name: 'Mats Hummels', countryId: 'deu', position: 'DFC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-podolski', name: 'Lukas Podolski', countryId: 'deu', position: 'EI', rating: 89, rarity: 'GOLD' },
+  { id: 'p-reus', name: 'Marco Reus', countryId: 'deu', position: 'MCO', rating: 91, rarity: 'LEGEND' },
+  { id: 'p-voller', name: 'Rudi Völler', countryId: 'deu', position: 'DC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-effenberg', name: 'Stefan Effenberg', countryId: 'deu', position: 'MC', rating: 92, rarity: 'LEGEND' },
+
+  // --- ITALIA ---
+  { id: 'p-zoff', name: 'Dino Zoff', countryId: 'ita', position: 'POR', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-paolorossi', name: 'Paolo Rossi', countryId: 'ita', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-baresi', name: 'Franco Baresi', countryId: 'ita', position: 'DFC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-bergomi', name: 'Giuseppe Bergomi', countryId: 'ita', position: 'DFC', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-baggio', name: 'Roberto Baggio', countryId: 'ita', position: 'MCO', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-maldini', name: 'Paolo Maldini', countryId: 'ita', position: 'LI', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-delpiero', name: 'Alessandro Del Piero', countryId: 'ita', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-totti', name: 'Francesco Totti', countryId: 'ita', position: 'MCO', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-cannavaro', name: 'Fabio Cannavaro', countryId: 'ita', position: 'DFC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-buffon', name: 'Gianluigi Buffon', countryId: 'ita', position: 'POR', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-pirlo', name: 'Andrea Pirlo', countryId: 'ita', position: 'MC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-derossi', name: 'Daniele De Rossi', countryId: 'ita', position: 'MCD', rating: 90, rarity: 'GOLD' },
+  { id: 'p-chiellini', name: 'Giorgio Chiellini', countryId: 'ita', position: 'DFC', rating: 91, rarity: 'GOLD' },
+  { id: 'p-bonucci', name: 'Leonardo Bonucci', countryId: 'ita', position: 'DFC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-verratti', name: 'Marco Verratti', countryId: 'ita', position: 'MC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-nesta', name: 'Alessandro Nesta', countryId: 'ita', position: 'DFC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-scirea', name: 'Gaetano Scirea', countryId: 'ita', position: 'DFC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-gentile', name: 'Claudio Gentile', countryId: 'ita', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-zambrotta', name: 'Gianluca Zambrotta', countryId: 'ita', position: 'LD', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-vieri', name: 'Christian Vieri', countryId: 'ita', position: 'DC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-inzaghi', name: 'Filippo Inzaghi', countryId: 'ita', position: 'DC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-gattuso', name: 'Gennaro Gattuso', countryId: 'ita', position: 'MCD', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-delvecchio', name: 'Marco Delvecchio', countryId: 'ita', position: 'DC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-donnarumma', name: 'Gianluigi Donnarumma', countryId: 'ita', position: 'POR', rating: 89, rarity: 'GOLD' },
+  { id: 'p-mancini', name: 'Roberto Mancini', countryId: 'ita', position: 'MCO', rating: 93, rarity: 'LEGEND' },
+
+  // --- FRANCIA ---
+  { id: 'p-mbappe', name: 'Kylian Mbappé', countryId: 'fra', position: 'DC', rating: 92, rarity: 'GOLD' },
+  { id: 'p-zidane', name: 'Zinedine Zidane', countryId: 'fra', position: 'MCO', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-griezmann', name: 'Antoine Griezmann', countryId: 'fra', position: 'MCO', rating: 87, rarity: 'GOLD' },
+  { id: 'p-saliba', name: 'William Saliba', countryId: 'fra', position: 'DFC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-maignan', name: 'Mike Maignan', countryId: 'fra', position: 'POR', rating: 86, rarity: 'GOLD' },
+  { id: 'p-platini', name: 'Michel Platini', countryId: 'fra', position: 'MCO', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-henry', name: 'Thierry Henry', countryId: 'fra', position: 'DC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-vieira', name: 'Patrick Vieira', countryId: 'fra', position: 'MCD', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-desailly', name: 'Marcel Desailly', countryId: 'fra', position: 'DFC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-thuram', name: 'Lilian Thuram', countryId: 'fra', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-cantona', name: 'Eric Cantona', countryId: 'fra', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-ribery', name: 'Franck Ribéry', countryId: 'fra', position: 'EI', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-pogba', name: 'Paul Pogba', countryId: 'fra', position: 'MC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-ginola', name: 'David Ginola', countryId: 'fra', position: 'EI', rating: 91, rarity: 'LEGEND' },
+  { id: 'p-blanc', name: 'Laurent Blanc', countryId: 'fra', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-makelele', name: 'Claude Makélélé', countryId: 'fra', position: 'MCD', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-benzema', name: 'Karim Benzema', countryId: 'fra', position: 'DC', rating: 93, rarity: 'LEGEND' },
+
+  // --- INGLATERRA ---
+  { id: 'p-kane', name: 'Harry Kane', countryId: 'eng', position: 'DC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-bellingham', name: 'Jude Bellingham', countryId: 'eng', position: 'MC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-saka', name: 'Bukayo Saka', countryId: 'eng', position: 'ED', rating: 87, rarity: 'GOLD' },
+  { id: 'p-stones', name: 'John Stones', countryId: 'eng', position: 'DFC', rating: 85, rarity: 'SILVER' },
+  { id: 'p-charlton', name: 'Bobby Charlton', countryId: 'eng', position: 'MCO', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-lineker', name: 'Gary Lineker', countryId: 'eng', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-gascoigne', name: 'Paul Gascoigne', countryId: 'eng', position: 'MC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-gerrard', name: 'Steven Gerrard', countryId: 'eng', position: 'MC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-lampard', name: 'Frank Lampard', countryId: 'eng', position: 'MC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-rooney', name: 'Wayne Rooney', countryId: 'eng', position: 'DC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-terry', name: 'John Terry', countryId: 'eng', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-rio', name: 'Rio Ferdinand', countryId: 'eng', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-cole', name: 'Ashley Cole', countryId: 'eng', position: 'LI', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-shearer', name: 'Alan Shearer', countryId: 'eng', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-beckham', name: 'David Beckham', countryId: 'eng', position: 'ED', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-scholes', name: 'Paul Scholes', countryId: 'eng', position: 'MC', rating: 94, rarity: 'LEGEND' },
+
+  // --- PORTUGAL ---
+  { id: 'p-cr7', name: 'Cristiano Ronaldo', countryId: 'prt', position: 'DC', rating: 91, rarity: 'GOLD' },
+  { id: 'p-leao', name: 'Rafael Leão', countryId: 'prt', position: 'EI', rating: 86, rarity: 'GOLD' },
+  { id: 'p-bruno', name: 'Bruno Fernandes', countryId: 'prt', position: 'MCO', rating: 88, rarity: 'GOLD' },
+  { id: 'p-dias', name: 'Rúben Dias', countryId: 'prt', position: 'DFC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-costa', name: 'Diogo Costa', countryId: 'prt', position: 'POR', rating: 85, rarity: 'SILVER' },
+  { id: 'p-eusebio', name: 'Eusébio', countryId: 'prt', position: 'DC', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-figo', name: 'Luís Figo', countryId: 'prt', position: 'ED', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-ruicosta', name: 'Rui Costa', countryId: 'prt', position: 'MCO', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-deco', name: 'Deco', countryId: 'prt', position: 'MC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-pepe', name: 'Pepe', countryId: 'prt', position: 'DFC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-nani', name: 'Nani', countryId: 'prt', position: 'ED', rating: 90, rarity: 'GOLD' },
+  { id: 'p-ricardocarvalho', name: 'Ricardo Carvalho', countryId: 'prt', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-joaomoutinho', name: 'João Moutinho', countryId: 'prt', position: 'MC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-bernardosilva', name: 'Bernardo Silva', countryId: 'prt', position: 'MCO', rating: 90, rarity: 'GOLD' },
+  { id: 'p-vitinha', name: 'Vitinha', countryId: 'prt', position: 'MC', rating: 87, rarity: 'GOLD' },
+
+  // --- URUGUAY ---
+  { id: 'p-obdulio', name: 'Obdulio Varela', countryId: 'uru', position: 'MCD', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-ghiggia', name: 'Alcides Ghiggia', countryId: 'uru', position: 'ED', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-francescoli', name: 'Enzo Francescoli', countryId: 'uru', position: 'MCO', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-forlan', name: 'Diego Forlán', countryId: 'uru', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-suarez', name: 'Luis Suárez', countryId: 'uru', position: 'DC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-cavani', name: 'Edinson Cavani', countryId: 'uru', position: 'DC', rating: 92, rarity: 'GOLD' },
+  { id: 'p-valverde', name: 'Federico Valverde', countryId: 'uru', position: 'MC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-godin', name: 'Diego Godín', countryId: 'uru', position: 'DFC', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-araujo', name: 'Ronald Araújo', countryId: 'uru', position: 'DFC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-rochet', name: 'Sergio Rochet', countryId: 'uru', position: 'POR', rating: 83, rarity: 'SILVER' },
+
+  // --- PAÍSES BAJOS ---
+  { id: 'p-cruyff', name: 'Johan Cruyff', countryId: 'nld', position: 'DC', rating: 99, rarity: 'LEGEND' },
+  { id: 'p-neeskens', name: 'Johan Neeskens', countryId: 'nld', position: 'MC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-vanbasten', name: 'Marco van Basten', countryId: 'nld', position: 'DC', rating: 98, rarity: 'LEGEND' },
+  { id: 'p-gullit', name: 'Ruud Gullit', countryId: 'nld', position: 'MC', rating: 97, rarity: 'LEGEND' },
+  { id: 'p-rijkaard', name: 'Frank Rijkaard', countryId: 'nld', position: 'MCD', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-koeman', name: 'Ronald Koeman', countryId: 'nld', position: 'DFC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-bergkamp', name: 'Dennis Bergkamp', countryId: 'nld', position: 'MCO', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-robben', name: 'Arjen Robben', countryId: 'nld', position: 'ED', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-sneijder', name: 'Wesley Sneijder', countryId: 'nld', position: 'MCO', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-vandersar', name: 'Edwin van der Sar', countryId: 'nld', position: 'POR', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-vandijk', name: 'Virgil van Dijk', countryId: 'nld', position: 'DFC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-dejong', name: 'Frenkie de Jong', countryId: 'nld', position: 'MC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-gakpo', name: 'Cody Gakpo', countryId: 'nld', position: 'EI', rating: 86, rarity: 'GOLD' },
+  { id: 'p-depay', name: 'Memphis Depay', countryId: 'nld', position: 'DC', rating: 85, rarity: 'GOLD' },
+  { id: 'p-dumfries', name: 'Denzel Dumfries', countryId: 'nld', position: 'LD', rating: 84, rarity: 'SILVER' },
+
+  // --- BÉLGICA ---
+  { id: 'p-pfaff', name: 'Jean-Marie Pfaff', countryId: 'bel', position: 'POR', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-scifo', name: 'Enzo Scifo', countryId: 'bel', position: 'MCO', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-kompany', name: 'Vincent Kompany', countryId: 'bel', position: 'DFC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-hazard', name: 'Eden Hazard', countryId: 'bel', position: 'EI', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-debruyne', name: 'Kevin De Bruyne', countryId: 'bel', position: 'MC', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-lukaku', name: 'Romelu Lukaku', countryId: 'bel', position: 'DC', rating: 89, rarity: 'GOLD' },
+  { id: 'p-courtois', name: 'Thibaut Courtois', countryId: 'bel', position: 'POR', rating: 91, rarity: 'GOLD' },
+  { id: 'p-witsel', name: 'Axel Witsel', countryId: 'bel', position: 'MC', rating: 86, rarity: 'GOLD' },
+  { id: 'p-castagne', name: 'Timothy Castagne', countryId: 'bel', position: 'LD', rating: 82, rarity: 'SILVER' },
+  { id: 'p-doku', name: 'Jérémy Doku', countryId: 'bel', position: 'EI', rating: 86, rarity: 'GOLD' },
+
+  // --- CROACIA ---
+  { id: 'p-suker', name: 'Davor Šuker', countryId: 'hrv', position: 'DC', rating: 95, rarity: 'LEGEND' },
+  { id: 'p-boban', name: 'Zvonimir Boban', countryId: 'hrv', position: 'MCO', rating: 94, rarity: 'LEGEND' },
+  { id: 'p-prosinecki', name: 'Robert Prosinečki', countryId: 'hrv', position: 'MC', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-modric', name: 'Luka Modrić', countryId: 'hrv', position: 'MC', rating: 96, rarity: 'LEGEND' },
+  { id: 'p-rakitic', name: 'Ivan Rakitić', countryId: 'hrv', position: 'MC', rating: 91, rarity: 'LEGEND' },
+  { id: 'p-mandzukic', name: 'Mario Mandžukić', countryId: 'hrv', position: 'DC', rating: 90, rarity: 'GOLD' },
+  { id: 'p-perisic', name: 'Ivan Perišić', countryId: 'hrv', position: 'EI', rating: 88, rarity: 'GOLD' },
+  { id: 'p-gvardiol', name: 'Joško Gvardiol', countryId: 'hrv', position: 'DFC', rating: 88, rarity: 'GOLD' },
+  { id: 'p-kovacic', name: 'Mateo Kovačić', countryId: 'hrv', position: 'MC', rating: 87, rarity: 'GOLD' },
+  { id: 'p-livakovic', name: 'Dominik Livaković', countryId: 'hrv', position: 'POR', rating: 84, rarity: 'SILVER' },
+
+  // --- MARRUECOS ---
+  { id: 'p-zaki', name: 'Badou Zaki', countryId: 'mar', position: 'POR', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-timoumi', name: 'Mohamed Timoumi', countryId: 'mar', position: 'MCO', rating: 93, rarity: 'LEGEND' },
+  { id: 'p-naybet', name: 'Noureddine Naybet', countryId: 'mar', position: 'DFC', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-hadji', name: 'Mustapha Hadji', countryId: 'mar', position: 'MCO', rating: 92, rarity: 'LEGEND' },
+  { id: 'p-ziyech', name: 'Hakim Ziyech', countryId: 'mar', position: 'ED', rating: 87, rarity: 'GOLD' },
+  { id: 'p-hakimi', name: 'Achraf Hakimi', countryId: 'mar', position: 'LD', rating: 90, rarity: 'GOLD' },
+  { id: 'p-amrabat', name: 'Sofyan Amrabat', countryId: 'mar', position: 'MCD', rating: 84, rarity: 'SILVER' },
+  { id: 'p-ennesyri', name: 'Youssef En-Nesyri', countryId: 'mar', position: 'DC', rating: 84, rarity: 'SILVER' },
+  { id: 'p-bounou', name: 'Yassine Bounou', countryId: 'mar', position: 'POR', rating: 88, rarity: 'GOLD' },
+  { id: 'p-aguerd', name: 'Nayef Aguerd', countryId: 'mar', position: 'DFC', rating: 84, rarity: 'SILVER' },
 ];
 
-const customers = [
-  {
-    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
-    name: 'Evil Rabbit',
-    email: 'evil@rabbit.com',
-    image_url: '/customers/evil-rabbit.png',
-  },
-  {
-    id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
-    name: 'Delba de Oliveira',
-    email: 'delba@oliveira.com',
-    image_url: '/customers/delba-de-oliveira.png',
-  },
-  {
-    id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
-    name: 'Lee Robinson',
-    email: 'lee@robinson.com',
-    image_url: '/customers/lee-robinson.png',
-  },
-  {
-    id: '76d65c26-f784-44a2-ac19-586678f7c2f2',
-    name: 'Michael Novotny',
-    email: 'michael@novotny.com',
-    image_url: '/customers/michael-novotny.png',
-  },
-  {
-    id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B9',
-    name: 'Amy Burns',
-    email: 'amy@burns.com',
-    image_url: '/customers/amy-burns.png',
-  },
-  {
-    id: '13D07535-C59E-4157-A011-F8D2EF4E0CBB',
-    name: 'Balazs Orban',
-    email: 'balazs@orban.com',
-    image_url: '/customers/balazs-orban.png',
-  },
-];
-
-const invoices = [
-  {
-    customer_id: customers[0].id,
-    amount: 15795,
-    status: 'pending',
-    date: '2022-12-06',
-  },
-  {
-    customer_id: customers[1].id,
-    amount: 20348,
-    status: 'pending',
-    date: '2022-11-14',
-  },
-  {
-    customer_id: customers[4].id,
-    amount: 3040,
-    status: 'paid',
-    date: '2022-10-29',
-  },
-  {
-    customer_id: customers[3].id,
-    amount: 44800,
-    status: 'paid',
-    date: '2023-09-10',
-  },
-  {
-    customer_id: customers[5].id,
-    amount: 34577,
-    status: 'pending',
-    date: '2023-08-05',
-  },
-  {
-    customer_id: customers[2].id,
-    amount: 54246,
-    status: 'pending',
-    date: '2023-07-16',
-  },
-  {
-    customer_id: customers[0].id,
-    amount: 666,
-    status: 'pending',
-    date: '2023-06-27',
-  },
-  {
-    customer_id: customers[3].id,
-    amount: 32545,
-    status: 'paid',
-    date: '2023-06-09',
-  },
-  {
-    customer_id: customers[4].id,
-    amount: 1250,
-    status: 'paid',
-    date: '2023-06-17',
-  },
-  {
-    customer_id: customers[5].id,
-    amount: 8546,
-    status: 'paid',
-    date: '2023-06-07',
-  },
-  {
-    customer_id: customers[1].id,
-    amount: 500,
-    status: 'paid',
-    date: '2023-08-19',
-  },
-  {
-    customer_id: customers[5].id,
-    amount: 8945,
-    status: 'paid',
-    date: '2023-06-03',
-  },
-  {
-    customer_id: customers[2].id,
-    amount: 1000,
-    status: 'paid',
-    date: '2022-06-05',
-  },
-];
-
-const revenue = [
-  { month: 'Jan', revenue: 2000 },
-  { month: 'Feb', revenue: 1800 },
-  { month: 'Mar', revenue: 2200 },
-  { month: 'Apr', revenue: 2500 },
-  { month: 'May', revenue: 2300 },
-  { month: 'Jun', revenue: 3200 },
-  { month: 'Jul', revenue: 3500 },
-  { month: 'Aug', revenue: 3700 },
-  { month: 'Sep', revenue: 2500 },
-  { month: 'Oct', revenue: 2800 },
-  { month: 'Nov', revenue: 3000 },
-  { month: 'Dec', revenue: 4800 },
-];
-
-export { users, customers, invoices, revenue };
+/**
+ * Función utilitaria de acceso rápido para filtrar jugadores por país y posición.
+ * Minimiza la carga de procesamiento en componentes visuales ("use client").
+ */
+export function getPlayersByCountryAndPosition(countryId: string, position: Position | string): Player[] {
+  return playersData.filter(
+    (player) => player.countryId === countryId && player.position === position
+  );
+}
