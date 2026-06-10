@@ -2,9 +2,8 @@
 'use client';
 
 import React from 'react';
-import { GridPositionState } from '@/app/lib/definitions';
-import { syne } from '@/app/ui/fonts';
-import PlayerCard from '@/app/ui/PlayerCard';
+import { GridPositionState } from '@/lib/definitions';
+import PlayerCard from '@/components/PlayerCard';
 
 interface SlotRendererProps {
   slotKey: string;
@@ -13,9 +12,9 @@ interface SlotRendererProps {
 }
 
 export default function SlotRenderer({ slotKey, state, onClick }: SlotRendererProps) {
-  // Si la posición ya tiene un jugador seleccionado, renderizamos su cromo de forma directa
+  // Si la posición ya tiene un jugador seleccionado, renderizamos su cromo de forma compacta
   if (state.selectedPlayer) {
-    return <PlayerCard player={state.selectedPlayer} size="sm" onClick={onClick} />;
+    return <PlayerCard player={state.selectedPlayer} compact onClick={onClick} />;
   }
 
   return (
@@ -33,42 +32,43 @@ export default function SlotRenderer({ slotKey, state, onClick }: SlotRendererPr
         h-14 
         md:w-16 
         md:h-16 
-        rounded-full 
-        bg-slate-900/50 
-        backdrop-blur-sm 
-        border-2 
-        border-dashed 
-        border-slate-600 
-        hover:border-emerald-400 
-        hover:bg-slate-900/90 
-        transition-all 
-        duration-200 
-        active:scale-90 
+        rounded-none 
+        bg-white 
+        border-3
+        border-retro-dark
+        hover:border-retro-dark 
+        hover:bg-retro-cream 
+        active:bg-retro-yellow
+        active:translate-x-0.5
+        active:translate-y-0.5
         outline-none 
         cursor-pointer
         select-none
+        font-mono
+        shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]
+        hover:shadow-[3px_3px_0px_0px_rgba(17,24,39,1)]
+        transition-all
       "
     >
-      {/* Siglas de la demarcación táctica con tipografía deportiva */}
+      {/* Siglas de la demarcación táctica con tipografía retro */}
       <span 
         className={`
-          ${syne.className} 
-          font-extrabold 
-          text-[11px] 
-          md:text-xs 
-          text-slate-400 
-          group-hover:text-emerald-400 
+          font-bold 
+          text-xs 
+          md:text-sm 
+          text-retro-dark 
+          group-hover:text-retro-green 
           transition-colors 
-          tracking-tight
+          tracking-wider
           uppercase
         `}
       >
         {state.position}
       </span>
 
-      {/* Badge flotante inferior estilo 'Píldora' interactiva */}
+      {/* Badge flotante inferior estilo retro */}
       <div 
-        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-slate-950 border border-slate-800 text-[8px] font-mono text-slate-500 px-1.5 py-0.5 rounded-full uppercase font-bold tracking-tighter group-hover:border-emerald-400 group-hover:text-emerald-400 transition-colors">
+        className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-retro-yellow border-2 border-retro-dark text-[9px] font-mono text-retro-dark px-1.5 py-0.5 rounded-none uppercase font-bold tracking-wider shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]">
         +
       </div>
     </button>

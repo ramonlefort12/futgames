@@ -2,7 +2,6 @@
 'use client';
 
 import React from 'react';
-import { syne } from '@/app/ui/fonts';
 
 interface SummaryCardProps {
   teamName: string;
@@ -39,67 +38,67 @@ export default function TournamentSummaryCard({
 
   return (
     <div 
-      className="w-full bg-gradient-to-b from-slate-900 via-slate-950 to-black border-2 border-emerald-500 rounded-2xl p-6 shadow-[0_0_25px_rgba(52,211,153,0.15)] flex flex-col items-center gap-6 text-white"
+      className="w-full bg-white border-3 border-retro-dark p-6 flex flex-col items-center gap-4 text-retro-dark font-mono shadow-[6px_6px_0px_0px_rgba(17,24,39,1)]"
     >
       {/* Cabecera de Identidad del Club */}
-      <div className="w-full text-center border-b border-slate-800 pb-4">
-        <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest font-bold">
-          • Ficha Oficial de Rendimiento •
+      <div className="w-full text-center border-b-3 border-retro-dark pb-4">
+        <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold block">
+          • FICHA OFICIAL DE RENDIMIENTO •
         </span>
-        <h2 className={`${syne.className} font-extrabold text-2xl text-white mt-1 uppercase tracking-tight`}>
+        <h2 className="font-black text-2xl text-retro-dark mt-2 uppercase tracking-wider retro-heading">
           {teamName || 'Dream Team FC'}
         </h2>
-        <p className="text-xs text-slate-400 font-mono mt-0.5">
-          DT: <span className="text-white font-sans font-semibold">{coachName || 'Entrenador Anónimo'}</span>
+        <p className="text-xs text-retro-dark font-bold mt-1 uppercase tracking-wider">
+          DT: <span className="text-retro-green">{coachName || 'Entrenador Anónimo'}</span>
         </p>
       </div>
 
       {/* Bloque Central: Rating Global (OVR) */}
-      <div className="flex flex-col items-center justify-center bg-slate-900/60 border border-slate-800 rounded-2xl w-32 h-32 relative group">
-        <div className="absolute -top-2.5 bg-emerald-500 text-black font-mono font-extrabold text-[9px] px-2 py-0.5 rounded-full uppercase">
+      <div className="flex flex-col items-center justify-center bg-retro-yellow border-3 border-retro-dark w-32 h-32 relative font-black">
+        <div className="absolute -top-4 bg-retro-cream text-retro-dark font-mono font-black text-[9px] px-3 py-1 border-2 border-retro-dark uppercase tracking-wider">
           Media OVR
         </div>
-        <span className={`${syne.className} font-black text-5xl text-emerald-400 tracking-tighter`}>
+        <span className="font-black text-6xl text-retro-dark tracking-tighter">
           {userRating}
         </span>
-        <span className="text-[10px] font-mono text-slate-500 uppercase mt-1 tracking-wider">
+        <span className="text-[10px] font-mono text-retro-dark uppercase mt-1 tracking-wider font-bold">
           potencia total
         </span>
       </div>
 
       {/* Desglose de Métricas Clave del Campeonato */}
-      <div className="w-full flex flex-col gap-3 font-sans text-sm">
+      <div className="w-full flex flex-col gap-2 font-mono text-xs">
         
         {/* Posición Final */}
-        <div className="flex justify-between items-center bg-slate-900/40 border border-slate-900 p-3 rounded-xl">
-          <span className="text-slate-400 font-mono text-xs uppercase">Resultado:</span>
-          <span className="font-bold text-white tracking-wide text-xs">{finalPosition}</span>
+        <div className="flex justify-between items-center bg-retro-cream border-2 border-retro-dark p-2">
+          <span className="text-retro-dark font-bold uppercase">Resultado:</span>
+          <span className="font-black text-retro-green tracking-wide text-xs">{finalPosition}</span>
         </div>
 
         {/* La Estrella del Equipo */}
-        <div className="flex justify-between items-center bg-slate-900/40 border border-slate-900 p-3 rounded-xl">
-          <span className="text-slate-400 font-mono text-xs uppercase">Estrella:</span>
+        <div className="flex justify-between items-center bg-retro-cream border-2 border-retro-dark p-2">
+          <span className="text-retro-dark font-bold uppercase">Estrella:</span>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="font-semibold text-white">{teamStar}</span>
+            <span className="text-retro-red font-black">⭐</span>
+            <span className="font-bold text-retro-green">{teamStar}</span>
           </div>
         </div>
 
         {/* Máximo Goleador */}
-        <div className="flex justify-between items-center bg-slate-900/40 border border-slate-900 p-3 rounded-xl">
-          <span className="text-slate-400 font-mono text-xs uppercase">Goleador:</span>
+        <div className="flex justify-between items-center bg-retro-cream border-2 border-retro-dark p-2">
+          <span className="text-retro-dark font-bold uppercase">Goleador:</span>
           <div className="flex items-center gap-1.5">
-            <span className="text-emerald-400">⚽</span>
-            <span className="font-semibold text-white">{topScorer}</span>
+            <span className="text-retro-red text-lg">⚽</span>
+            <span className="font-bold text-retro-green">{topScorer}</span>
           </div>
         </div>
 
       </div>
 
       {/* Pie de Firma de Seguridad del Sistema */}
-      <div className="w-full flex justify-between items-center border-t border-slate-800 pt-4 text-[9px] font-mono text-slate-500 uppercase tracking-widest">
+      <div className="w-full flex justify-between items-center border-t-3 border-retro-dark pt-3 text-[8px] font-mono text-gray-600 uppercase tracking-widest font-bold">
         <span>futgames v2.1</span>
-        <span>autenticado por ia</span>
+        <span className="text-retro-red">MUNDIAL '26</span>
       </div>
     </div>
   );

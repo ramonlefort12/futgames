@@ -1,6 +1,6 @@
 // components/BracketView.tsx
 import React from 'react';
-import { PlayoffBracket, TournamentStage } from '@/app/lib/useFutgames';
+import { PlayoffBracket, TournamentStage } from '@/hooks/useTournament';
 
 interface BracketViewProps {
   bracket: PlayoffBracket;
@@ -29,15 +29,16 @@ export default function BracketView({ bracket, tournamentStage }: BracketViewPro
     return (
       <div 
         key={m.id} 
-        className={`p-1.5 border rounded-lg text-[9px] flex flex-col gap-0.5 bg-cyber-card/40 backdrop-blur-xs transition-all w-full ${
-          isActive ? 'border-cyber-neon neon-glow-sm scale-[1.02]' : 'border-cyber-border/20'
+        className={`p-2 border-2 border-retro-dark text-[9px] flex flex-col gap-0.5 bg-white font-mono w-full shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] ${
+          isActive ? 'bg-retro-yellow' : 'bg-white'
         }`}
       >
-        <div className={`flex justify-between items-center px-1 truncate ${m.w === m.t1 ? 'text-cyber-neon font-bold' : 'text-gray-300'}`}>
+        <div className={`flex justify-between items-center px-1 truncate font-bold ${m.w === m.t1 ? 'text-retro-green' : 'text-retro-dark'}`}>
           <span className="truncate max-w-[65px]">{m.t1}</span>
           {m.w && <span className="text-[8px]">{m.w === m.t1 ? '✓' : '✗'}</span>}
         </div>
-        <div className={`flex justify-between items-center px-1 truncate ${m.w === m.t2 ? 'text-cyber-neon font-bold' : 'text-gray-300'}`}>
+        <div className="border-t border-retro-dark/20"></div>
+        <div className={`flex justify-between items-center px-1 truncate font-bold ${m.w === m.t2 ? 'text-retro-red' : 'text-retro-dark'}`}>
           <span className="truncate max-w-[65px]">{m.t2}</span>
           {m.w && <span className="text-[8px]">{m.w === m.t2 ? '✓' : '✗'}</span>}
         </div>
@@ -46,8 +47,8 @@ export default function BracketView({ bracket, tournamentStage }: BracketViewPro
   };
 
   return (
-    <div className="w-full flex flex-col bg-black/30 border border-cyber-border/20 rounded-2xl p-3 mb-4 font-mono select-none">
-      <div className="text-[9px] text-gray-400 uppercase tracking-widest text-center border-b border-cyber-border/10 pb-2 mb-4 font-bold">
+    <div className="w-full flex flex-col bg-retro-cream border-3 border-retro-dark p-4 mb-4 font-mono select-none shadow-[4px_4px_0px_0px_rgba(17,24,39,1)]">
+      <div className="text-[9px] text-retro-dark uppercase tracking-widest text-center border-b-2 border-retro-dark pb-3 mb-4 font-bold">
         🔲 CUADRO DE ELIMINATORIAS DE LA COPA
       </div>
 
@@ -58,48 +59,48 @@ export default function BracketView({ bracket, tournamentStage }: BracketViewPro
         <div className="flex flex-col justify-between h-full gap-3">
           {/* Octavos Izquierda */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-[7px] text-gray-500 font-bold uppercase text-center block">Octavos L</span>
+            <span className="text-[7px] text-retro-dark font-bold uppercase text-center block bg-retro-yellow border border-retro-dark px-1 py-0.5">Octavos L</span>
             {octavosIzquierda.map(m => renderMatchCard(m, 'OCTAVOS'))}
           </div>
           
           {/* Conector/Cuartos Izquierda */}
           <div className="flex flex-col gap-1 mt-auto">
-            <span className="text-[7px] text-gray-500 font-bold uppercase text-center block">Cuartos L</span>
+            <span className="text-[7px] text-retro-dark font-bold uppercase text-center block bg-retro-cream border border-retro-dark px-1 py-0.5">Cuartos L</span>
             {cuartosIzquierda.map(m => renderMatchCard(m, 'CUARTOS'))}
           </div>
 
           {/* Semifinal Izquierda */}
           <div className="flex flex-col gap-1 mt-auto">
-            <span className="text-[7px] text-gray-500 font-bold uppercase text-center block">Semi L</span>
+            <span className="text-[7px] text-retro-dark font-bold uppercase text-center block bg-retro-cream border border-retro-dark px-1 py-0.5">Semi L</span>
             {semiIzquierda.map(m => renderMatchCard(m, 'SEMIS'))}
           </div>
         </div>
 
         {/* ================= CENTRO: GRAN FINAL ================= */}
-        <div className="flex flex-col justify-center items-center h-full border-x border-cyber-border/10 px-1 self-center py-4">
-          <div className="text-center mb-2 animate-pulse">
-            <span className="text-[8px] text-cyber-neon font-black tracking-widest uppercase block">🏆 GRAN FINAL</span>
+        <div className="flex flex-col justify-center items-center h-full border-x-2 border-retro-dark px-2 self-center py-4">
+          <div className="text-center mb-3">
+            <span className="text-[8px] text-retro-green font-black tracking-widest uppercase block bg-retro-yellow border-2 border-retro-dark px-2 py-1">🏆 GRAN FINAL</span>
           </div>
           
-          <div className={`p-2.5 border rounded-xl text-[10px] flex flex-col gap-1.5 bg-gradient-to-b from-cyber-card to-black w-full shadow-lg ${
-            tournamentStage === 'FINAL' ? 'border-cyber-neon neon-glow-md scale-[1.05]' : 'border-cyber-border/30'
+          <div className={`p-2.5 border-2 border-retro-dark text-[10px] flex flex-col gap-1.5 bg-white w-full shadow-[3px_3px_0px_0px_rgba(17,24,39,1)] ${
+            tournamentStage === 'FINAL' ? 'bg-retro-yellow' : 'bg-white'
           }`}>
-            <div className={`flex justify-between items-center ${bracket.final.w === bracket.final.t1 ? 'text-cyber-neon font-bold' : 'text-gray-200'}`}>
+            <div className={`flex justify-between items-center font-bold ${bracket.final.w === bracket.final.t1 ? 'text-retro-green' : 'text-retro-dark'}`}>
               <span className="truncate max-w-[75px] font-mono">{bracket.final.t1 || 'Finalista 1'}</span>
               {bracket.final.w && <span>{bracket.final.w === bracket.final.t1 ? '👑' : '✗'}</span>}
             </div>
             
-            <div className="border-t border-dashed border-cyber-border/20 my-0.5" />
+            <div className="border-t-2 border-retro-dark/30 my-0.5" />
             
-            <div className={`flex justify-between items-center ${bracket.final.w === bracket.final.t2 ? 'text-cyber-neon font-bold' : 'text-gray-200'}`}>
+            <div className={`flex justify-between items-center font-bold ${bracket.final.w === bracket.final.t2 ? 'text-retro-red' : 'text-retro-dark'}`}>
               <span className="truncate max-w-[75px] font-mono">{bracket.final.t2 || 'Finalista 2'}</span>
               {bracket.final.w && <span>{bracket.final.w === bracket.final.t2 ? '👑' : '✗'}</span>}
             </div>
           </div>
           
           {bracket.final.w && (
-            <div className="mt-3 text-center text-[7px] font-mono text-cyber-neon border border-cyber-neon/30 px-1.5 py-0.5 rounded bg-cyber-neon/10 animate-bounce">
-              WINNER: {bracket.final.w}
+            <div className="mt-3 text-center text-[7px] font-mono text-retro-green border-2 border-retro-dark px-2 py-1 bg-retro-yellow font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]">
+              CAMPEÓN: {bracket.final.w}
             </div>
           )}
         </div>
@@ -108,20 +109,20 @@ export default function BracketView({ bracket, tournamentStage }: BracketViewPro
         <div className="flex flex-col justify-between h-full gap-3">
           {/* Octavos Derecha */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-[7px] text-gray-500 font-bold uppercase text-center block">Octavos R</span>
+            <span className="text-[7px] text-retro-dark font-bold uppercase text-center block bg-retro-yellow border border-retro-dark px-1 py-0.5">Octavos R</span>
             {octavosDerecha.map(m => renderMatchCard(m, 'OCTAVOS'))}
           </div>
           
           {/* Conector/Cuartos Derecha */}
           <div className="flex flex-col gap-1 mt-auto">
-            <span className="text-[7px] text-gray-500 font-bold uppercase text-center block">Cuartos R</span>
+            <span className="text-[7px] text-retro-dark font-bold uppercase text-center block bg-retro-cream border border-retro-dark px-1 py-0.5">Cuartos R</span>
             {cuartosDerecha.map(m => renderMatchCard(m, 'CUARTOS'))}
           </div>
 
           {/* Semifinal Derecha */}
           <div className="flex flex-col gap-1 mt-auto">
-            <span className="text-[7px] text-gray-500 font-bold uppercase text-center block">Semi R</span>
-            <div className="p-1.5 border border-cyber-border/10 rounded-lg text-[9px] bg-cyber-card/20 text-gray-500 text-center truncate italic">
+            <span className="text-[7px] text-retro-dark font-bold uppercase text-center block bg-retro-cream border border-retro-dark px-1 py-0.5">Semi R</span>
+            <div className="p-2 border-2 border-retro-dark text-[9px] bg-retro-cream text-retro-dark text-center truncate font-bold font-mono shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]">
               {bracket.cuartos[1]?.w || semiDerechaPlaceholder}
             </div>
           </div>
