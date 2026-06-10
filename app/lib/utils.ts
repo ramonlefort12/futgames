@@ -1,6 +1,6 @@
 // app/lib/utils.ts
 
-import { Country } from './definitions';
+import { Country } from '@/lib/definitions';
 import { countriesData } from './placeholder-data';
 
 /**
