@@ -1,13 +1,22 @@
-// app/lib/useFutgames.ts
+'use client';
+
 import { useState, useEffect } from 'react';
-import { Position, GridPositionState, Player, Country, MatchSimulation } from '@/app/lib/definitions';
+import { Position, GridPositionState, Player, Country, MatchSimulation } from '@/lib/definitions';
 import { getPlayersByCountryAndPosition } from '@/app/lib/placeholder-data';
 import { generateRandomCountriesForDraft } from '@/app/lib/utils';
 
 export const FORMATIONS = {
   '4-3-3': {
     name: '4-3-3 Clásica',
+    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MC2', 'MC3'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
+  },
+  '4-3-3 - Of': {
+    name: '4-3-3 Ofensiva',
     lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MCO', 'MC2'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
+  },
+  '4-3-3 - Def': {
+    name: '4-3-3 Defensiva',
+    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MCD', 'MC2'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
   },
   '4-4-2': {
     name: '4-4-2 Tradicional',
@@ -23,11 +32,21 @@ export type FormationType = keyof typeof FORMATIONS;
 export type TournamentStage = 'GRUPO J1' | 'GRUPO J2' | 'GRUPO J3' | 'OCTAVOS' | 'CUARTOS' | 'SEMIS' | 'FINAL';
 
 export interface GroupTeamState { name: string; rating: number; points: number; gf: number; gc: number; }
+
+export interface MatchSlot {
+  id: string;
+  t1: string;
+  t2: string;
+  score1?: number;
+  score2?: number;
+  w?: string;
+}
+
 export interface PlayoffBracket {
-  octavos: { id: string; t1: string; t2: string; w?: string }[];
-  cuartos: { id: string; t1: string; t2: string; w?: string }[];
-  semis: { id: string; t1: string; t2: string; w?: string }[];
-  final: { id: string; t1: string; t2: string; w?: string };
+  octavos: MatchSlot[];
+  cuartos: MatchSlot[];
+  semis: MatchSlot[];
+  final: MatchSlot;
 }
 
 const WORLD_TEAMS_POOL = [
@@ -42,7 +61,7 @@ const WORLD_TEAMS_POOL = [
   { name: 'Senegal', baseRating: 79 }, { name: 'Bélgica', baseRating: 82 }
 ];
 
-export function useFutgames() {
+export function useTournaments() {
   const [currentFormation, setCurrentFormation] = useState<FormationType>('4-3-3');
   const [lineup, setLineup] = useState<Record<string, GridPositionState>>({});
   const [view, setView] = useState<'PLAY' | 'TOURNAMENT_BRACKET'>('PLAY');
@@ -56,10 +75,8 @@ export function useFutgames() {
   const [activeSlot, setActiveSlot] = useState<string | null>(null);
   const [currentCountryOptions, setCurrentCountryOptions] = useState<Country | null>(null);
   const [draftCandidates, setDraftCandidates] = useState<Player[]>([]);
+  const [userTeamNameLabel, setUserTeamNameLabel] = useState<string>('Estados Unidos');
 
-  const userTeamNameLabel = lineup[Object.keys(lineup)[0]]?.assignedCountry?.name || 'Tu Equipo';
-
-  // Efecto 1: Cambios de formación
   useEffect(() => {
     const selectedFormation = FORMATIONS[currentFormation];
     const newState = {} as Record<string, GridPositionState>;
@@ -70,7 +87,6 @@ export function useFutgames() {
     setView('PLAY');
   }, [currentFormation]);
 
-  // Efecto 2: OVR Team
   useEffect(() => {
     const selectedPlayers = Object.values(lineup).filter((slot) => slot.selectedPlayer);
     if (selectedPlayers.length === 0) { setUserRating(0); return; }
@@ -78,13 +94,14 @@ export function useFutgames() {
     setUserRating(Math.round(totalRating / selectedPlayers.length));
   }, [lineup]);
 
-  // Efecto 3: Sincronizar OVR del usuario en la tabla de grupos
   useEffect(() => {
     setGroupTeams(prev => prev.map(t => t.name === userTeamNameLabel ? { ...t, rating: userRating } : t));
   }, [userRating, userTeamNameLabel]);
 
   const initTournamentStructure = () => {
-    const shuffled = [...WORLD_TEAMS_POOL].sort(() => Math.random() - 0.5);
+    const shuffled = [...WORLD_TEAMS_POOL]
+      .filter(t => t.name.toLowerCase() !== userTeamNameLabel.toLowerCase())
+      .sort(() => Math.random() - 0.5);
     const selectedRivals = shuffled.slice(0, 3);
     const initialGroup: GroupTeamState[] = [
       { name: userTeamNameLabel, rating: userRating, points: 0, gf: 0, gc: 0 },
@@ -98,25 +115,42 @@ export function useFutgames() {
     setView('TOURNAMENT_BRACKET');
   };
 
+  const getTeamRating = (teamName: string): number => {
+    if (teamName === userTeamNameLabel) return userRating;
+    return WORLD_TEAMS_POOL.find(t => t.name === teamName)?.baseRating || 82;
+  };
+
   const generateGlobalBracket = (userTeam: string) => {
-    const shuffledPool = [...WORLD_TEAMS_POOL]
-      .filter(t => t.name !== userTeam && !groupTeams.some(g => g.name === t.name))
+    const pool = [...WORLD_TEAMS_POOL]
+      .filter(t => t.name.toLowerCase() !== userTeam.toLowerCase() && !groupTeams.some(g => g.name === t.name))
       .sort(() => Math.random() - 0.5);
+
     const secondPlaceGroup = groupTeams[1]?.name || 'Rival IA';
 
+    // Generamos las llaves de Octavos simétricos (8 partidos en total)
+    // Lado Izquierdo (o1 - o4), Lado Derecho (o5 - o8)
     setBracket({
       octavos: [
-        { id: 'o1', t1: userTeam, t2: shuffledPool[0].name },
-        { id: 'o2', t1: shuffledPool[1].name, t2: shuffledPool[2].name },
-        { id: 'o3', t1: shuffledPool[3].name, t2: shuffledPool[4].name },
-        { id: 'o4', t1: shuffledPool[5].name, t2: secondPlaceGroup },
+        { id: 'o1', t1: userTeam, t2: pool[0].name },
+        { id: 'o2', t1: pool[1].name, t2: pool[2].name },
+        { id: 'o3', t1: pool[3].name, t2: pool[4].name },
+        { id: 'o4', t1: pool[5].name, t2: secondPlaceGroup },
+        { id: 'o5', t1: pool[6].name, t2: pool[7].name },
+        { id: 'o6', t1: pool[8].name, t2: pool[9].name },
+        { id: 'o7', t1: pool[10].name, t2: pool[11].name },
+        { id: 'o8', t1: pool[12].name, t2: pool[13].name },
       ],
       cuartos: [
-        { id: 'c1', t1: 'Ganador Octavos 1', t2: 'Ganador Octavos 2' },
-        { id: 'c2', t1: 'Ganador Octavos 3', t2: 'Ganador Octavos 4' }
+        { id: 'c1', t1: 'Ganador o1', t2: 'Ganador o2' },
+        { id: 'c2', t1: 'Ganador o3', t2: 'Ganador o4' },
+        { id: 'c3', t1: 'Ganador o5', t2: 'Ganador o6' },
+        { id: 'c4', t1: 'Ganador o7', t2: 'Ganador o8' },
       ],
-      semis: [{ id: 's1', t1: 'Ganador Cuartos 1', t2: 'Ganador Cuartos 2' }],
-      final: { id: 'f1', t1: 'Ganador Semis', t2: shuffledPool[6].name }
+      semis: [
+        { id: 's1', t1: 'Ganador c1', t2: 'Ganador c2' },
+        { id: 's2', t1: 'Ganador c3', t2: 'Ganador c4' }
+      ],
+      final: { id: 'f1', t1: 'Ganador s1', t2: 'Ganador s2' }
     });
   };
 
@@ -125,10 +159,15 @@ export function useFutgames() {
     const randomCountries = generateRandomCountriesForDraft();
     if (randomCountries.length === 0) return;
     const selectedCountry = randomCountries[0];
-    const candidates = getPlayersByCountryAndPosition(selectedCountry.id, position);
+    const rawCandidates = getPlayersByCountryAndPosition(selectedCountry.id, position);
+    
+    const playersInLineupIds = Object.values(lineup).map(slot => slot.selectedPlayer?.id).filter(Boolean);
+    const availableCandidates = rawCandidates.filter(player => !playersInLineupIds.includes(player.id));
+    const randomFilteredCandidates = [...availableCandidates].sort(() => Math.random() - 0.5).slice(0, 3);
+
     setActiveSlot(slotKey);
     setCurrentCountryOptions(selectedCountry);
-    setDraftCandidates(candidates);
+    setDraftCandidates(randomFilteredCandidates);
   };
 
   const handleSelectPlayer = (player: Player) => {
@@ -170,14 +209,14 @@ export function useFutgames() {
 
       setMatchesLog(prev => [...prev, userMatch, iaMatch]);
 
-      // Helper inline para mutar la tabla localmente de forma segura
       setGroupTeams(prev => {
         const updated = prev.map(team => {
           let p = team.points, gf = team.gf, gc = team.gc;
-          [userMatch, iaMatch].forEach(m => {
-            if (team.name === m.homeTeamName) { gf += m.homeScore; gc += m.awayScore; p += m.winnerName === m.homeTeamName ? 3 : (m.winnerName === 'EMPATE' ? 1 : 0); }
-            else if (team.name === m.awayTeamName) { gf += m.awayScore; gc += m.homeScore; p += m.winnerName === m.awayTeamName ? 3 : (m.winnerName === 'EMPATE' ? 1 : 0); }
-          });
+          if (team.name === userMatch.homeTeamName) { gf += userMatch.homeScore; gc += userMatch.awayScore; p += userMatch.winnerName === userMatch.homeTeamName ? 3 : (userMatch.winnerName === 'EMPATE' ? 1 : 0); }
+          else if (team.name === userMatch.awayTeamName) { gf += userMatch.awayScore; gc += userMatch.homeScore; p += userMatch.winnerName === userMatch.awayTeamName ? 3 : (userMatch.winnerName === 'EMPATE' ? 1 : 0); }
+          
+          if (team.name === iaMatch.homeTeamName) { gf += iaMatch.homeScore; gc += iaMatch.awayScore; p += iaMatch.winnerName === iaMatch.homeTeamName ? 3 : (iaMatch.winnerName === 'EMPATE' ? 1 : 0); }
+          else if (team.name === iaMatch.awayTeamName) { gf += iaMatch.awayScore; gc += iaMatch.homeScore; p += iaMatch.winnerName === iaMatch.awayTeamName ? 3 : (iaMatch.winnerName === 'EMPATE' ? 1 : 0); }
           return { ...team, points: p, gf, gc };
         });
         return updated.sort((a, b) => b.points - a.points || (b.gf - b.gc) - (a.gf - a.gc) || b.gf - a.gf);
@@ -198,52 +237,98 @@ export function useFutgames() {
 
     if (!bracket) return;
 
+    // SIMULACIÓN COMPLETA DE FASES ELIMINATORIAS (Alineado con el Bracket de Espejo)
     if (tournamentStage === 'OCTAVOS') {
-      const userMatch = simulateMatch(userRating, WORLD_TEAMS_POOL.find(t => t.name === bracket.octavos[0].t2)?.baseRating || 83, userTeamNameLabel, bracket.octavos[0].t2, false);
-      const w2 = Math.random() > 0.5 ? bracket.octavos[1].t1 : bracket.octavos[1].t2;
-      const w3 = Math.random() > 0.5 ? bracket.octavos[2].t1 : bracket.octavos[2].t2;
-      const w4 = Math.random() > 0.5 ? bracket.octavos[3].t1 : bracket.octavos[3].t2;
-      setMatchesLog(prev => [...prev, userMatch]);
+      const simulatedOctavos = bracket.octavos.map(match => {
+        const p1 = getTeamRating(match.t1);
+        const p2 = getTeamRating(match.t2);
+        const sim = simulateMatch(p1, p2, match.t1, match.t2, false);
+        return { ...match, score1: sim.homeScore, score2: sim.awayScore, w: sim.winnerName };
+      });
 
-      if (userMatch.winnerName === userTeamNameLabel) {
-        setBracket(prev => !prev ? null : {
-          ...prev,
-          octavos: prev.octavos.map((o, i) => ({ ...o, w: [userTeamNameLabel, w2, w3, w4][i] })),
-          cuartos: [{ id: 'c1', t1: userTeamNameLabel, t2: w2 }, { id: 'c2', t1: w3, t2: w4 }]
+      const userMatch = simulatedOctavos[0];
+      setMatchesLog(prev => [...prev, { id: userMatch.id, homeTeamName: userMatch.t1, awayTeamName: userMatch.t2, homeScore: userMatch.score1!, awayScore: userMatch.score2!, isCompleted: true, winnerName: userMatch.w! }]);
+
+      if (userMatch.w === userTeamNameLabel) {
+        setBracket(prev => {
+          if (!prev) return null;
+          const nextCuartos = [
+            { id: 'c1', t1: simulatedOctavos[0].w!, t2: simulatedOctavos[1].w! },
+            { id: 'c2', t1: simulatedOctavos[2].w!, t2: simulatedOctavos[3].w! },
+            { id: 'c3', t1: simulatedOctavos[4].w!, t2: simulatedOctavos[5].w! },
+            { id: 'c4', t1: simulatedOctavos[6].w!, t2: simulatedOctavos[7].w! }
+          ];
+          return { ...prev, octavos: simulatedOctavos, cuartos: nextCuartos };
         });
         setTournamentStage('CUARTOS');
-      } else { setTournamentStatus('ELIMINATED'); }
-    }
+      } else {
+        setBracket(prev => prev ? { ...prev, octavos: simulatedOctavos } : null);
+        setTournamentStatus('ELIMINATED');
+      }
+    } 
     else if (tournamentStage === 'CUARTOS') {
-      const userMatch = simulateMatch(userRating, WORLD_TEAMS_POOL.find(t => t.name === bracket.cuartos[0].t2)?.baseRating || 84, userTeamNameLabel, bracket.cuartos[0].t2, false);
-      const w2 = Math.random() > 0.5 ? bracket.cuartos[1].t1 : bracket.cuartos[1].t2;
-      setMatchesLog(prev => [...prev, userMatch]);
+      const simulatedCuartos = bracket.cuartos.map(match => {
+        const p1 = getTeamRating(match.t1);
+        const p2 = getTeamRating(match.t2);
+        const sim = simulateMatch(p1, p2, match.t1, match.t2, false);
+        return { ...match, score1: sim.homeScore, score2: sim.awayScore, w: sim.winnerName };
+      });
 
-      if (userMatch.winnerName === userTeamNameLabel) {
-        setBracket(prev => !prev ? null : {
-          ...prev,
-          cuartos: prev.cuartos.map((c, i) => ({ ...c, w: [userTeamNameLabel, w2][i] })),
-          semis: [{ id: 's1', t1: userTeamNameLabel, t2: w2 }]
+      const userMatch = simulatedCuartos[0];
+      setMatchesLog(prev => [...prev, { id: userMatch.id, homeTeamName: userMatch.t1, awayTeamName: userMatch.t2, homeScore: userMatch.score1!, awayScore: userMatch.score2!, isCompleted: true, winnerName: userMatch.w! }]);
+
+      if (userMatch.w === userTeamNameLabel) {
+        setBracket(prev => {
+          if (!prev) return null;
+          const nextSemis = [
+            { id: 's1', t1: simulatedCuartos[0].w!, t2: simulatedCuartos[1].w! },
+            { id: 's2', t1: simulatedCuartos[2].w!, t2: simulatedCuartos[3].w! }
+          ];
+          return { ...prev, cuartos: simulatedCuartos, semis: nextSemis };
         });
         setTournamentStage('SEMIS');
-      } else { setTournamentStatus('ELIMINATED'); }
-    }
+      } else {
+        setBracket(prev => prev ? { ...prev, cuartos: simulatedCuartos } : null);
+        setTournamentStatus('ELIMINATED');
+      }
+    } 
     else if (tournamentStage === 'SEMIS') {
-      const userMatch = simulateMatch(userRating, WORLD_TEAMS_POOL.find(t => t.name === bracket.semis[0].t2)?.baseRating || 86, userTeamNameLabel, bracket.semis[0].t2, false);
-      setMatchesLog(prev => [...prev, userMatch]);
+      const simulatedSemis = bracket.semis.map(match => {
+        const p1 = getTeamRating(match.t1);
+        const p2 = getTeamRating(match.t2);
+        const sim = simulateMatch(p1, p2, match.t1, match.t2, false);
+        return { ...match, score1: sim.homeScore, score2: sim.awayScore, w: sim.winnerName };
+      });
 
-      if (userMatch.winnerName === userTeamNameLabel) {
-        setBracket(prev => !prev ? null : { ...prev, semis: [{ ...prev.semis[0], w: userTeamNameLabel }], final: { ...prev.final, t1: userTeamNameLabel } });
+      const userMatch = simulatedSemis[0];
+      setMatchesLog(prev => [...prev, { id: userMatch.id, homeTeamName: userMatch.t1, awayTeamName: userMatch.t2, homeScore: userMatch.score1!, awayScore: userMatch.score2!, isCompleted: true, winnerName: userMatch.w! }]);
+
+      if (userMatch.w === userTeamNameLabel) {
+        setBracket(prev => {
+          if (!prev) return null;
+          const nextFinal = { id: 'f1', t1: simulatedSemis[0].w!, t2: simulatedSemis[1].w! };
+          return { ...prev, semis: simulatedSemis, final: nextFinal };
+        });
         setTournamentStage('FINAL');
-      } else { setTournamentStatus('ELIMINATED'); }
-    }
+      } else {
+        setBracket(prev => prev ? { ...prev, semis: simulatedSemis } : null);
+        setTournamentStatus('ELIMINATED');
+      }
+    } 
     else if (tournamentStage === 'FINAL') {
-      const userMatch = simulateMatch(userRating, WORLD_TEAMS_POOL.find(t => t.name === bracket.final.t2)?.baseRating || 88, userTeamNameLabel, bracket.final.t2, false);
-      setMatchesLog(prev => [...prev, userMatch]);
-      if (userMatch.winnerName === userTeamNameLabel) {
-        setBracket(prev => !prev ? null : { ...prev, final: { ...prev.final, w: userTeamNameLabel } });
+      const m = bracket.final;
+      const sim = simulateMatch(getTeamRating(m.t1), getTeamRating(m.t2), m.t1, m.t2, false);
+      const simulatedFinal = { ...m, score1: sim.homeScore, score2: sim.awayScore, w: sim.winnerName };
+
+      setMatchesLog(prev => [...prev, { id: m.id, homeTeamName: m.t1, awayTeamName: m.t2, homeScore: sim.homeScore, awayScore: sim.awayScore, isCompleted: true, winnerName: sim.winnerName }]);
+
+      setBracket(prev => prev ? { ...prev, final: simulatedFinal } : null);
+
+      if (simulatedFinal.w === userTeamNameLabel) {
         setTournamentStatus('CHAMPION');
-      } else { setTournamentStatus('ELIMINATED'); }
+      } else {
+        setTournamentStatus('ELIMINATED');
+      }
     }
   };
 
@@ -253,7 +338,7 @@ export function useFutgames() {
   return {
     currentFormation, setCurrentFormation, lineup, setLineup, view, setView, userRating, matchesLog, setMatchesLog,
     tournamentStage, setTournamentStage, tournamentStatus, setTournamentStatus, groupTeams, bracket, activeSlot, setActiveSlot,
-    currentCountryOptions, setCurrentCountryOptions, draftCandidates, setDraftCandidates, userTeamNameLabel, totalSelected,
+    currentCountryOptions, setCurrentCountryOptions, draftCandidates, setDraftCandidates, userTeamNameLabel, setUserTeamNameLabel, totalSelected,
     totalPositionsInFormation, initTournamentStructure, handleSlotClick, handleSelectPlayer, handleNextRonda
   };
 }

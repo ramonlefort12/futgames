@@ -24,12 +24,15 @@ export interface Country {
  * Modelo estricto para la entidad de un Jugador.
  */
 export interface Player {
-  id: string;          // ID único del futbolista (ej: 'messi-2026')
-  name: string;        // Nombre comercial (ej: 'L. Messi')
-  countryId: string;   // Relación directa con el ID de la Selección (Country)
-  position: Position;  // Posición natural del jugador
-  rating: number;      // Puntuación general (0 - 99)
-  rarity: PlayerRarity;// Tipo de cromo para renderizado UI
+  id: string; // ID único del futbolista (ej: 'messi-2026')
+  name: string; // Nombre completo (ej: 'Leo Messi')
+  shortName: string; // Nombre común o de camiseta (ej: "I. Casillas", "Pelé")
+  nickname: string; // Apodo histórico (ej: "El Santo", "O Rei")
+  countryId: string; // Relación directa con el ID de la Selección (Country)
+  position: string; // Posición principal del torneo referenciado
+  otherPositions: string[]; // Posiciones secundarias mapeadas
+  rating: number; // Puntuación general (0 - 99)
+  worldCupEdition: number; // Año del Mundial específico que justifica el pico de rendimiento y rating
   imageUrl?: string;   // Opcional: Silueta vectorial o foto comprimida
 }
 

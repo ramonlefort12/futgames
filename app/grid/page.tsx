@@ -2,11 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import { syne } from '@/app/ui/fonts';
 import Link from 'next/link';
-import { Player } from '@/app/lib/definitions';
+import { Player } from '@/lib/definitions';
 import { playersData, countriesData } from '@/app/lib/placeholder-data';
-import PlayerCard from '@/app/ui/PlayerCard';
+import PlayerCard from '@/components/PlayerCard';
 
 // 1. CONFIGURACIÓN DEL RETO DIARIO (Criterios fijos para filas y columnas)
 const GRID_CRITERIOS = {
@@ -104,64 +103,64 @@ export default function ImmaculateGridPage() {
   };
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-white p-4 md:p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-retro-cream text-retro-dark p-4 md:p-6 flex flex-col items-center">
       <div className="w-full max-w-md flex flex-col">
         
         {/* ENLACES DE CONTROL */}
-        <Link href="/" className="text-xs font-mono text-cyber-neon hover:underline mb-6 flex items-center gap-1 self-start">
+        <Link href="/" className="text-xs font-mono text-retro-green hover:underline mb-6 flex items-center gap-1 self-start font-bold">
           ← volver al campo de juego
         </Link>
 
         {/* CABECERA */}
-        <header className="mb-4">
-          <h1 className={`${syne.className} font-extrabold text-3xl tracking-tighter lowercase`}>
-            immaculate <span className="text-cyber-neon">grid</span>
+        <header className="mb-6">
+          <h1 className="retro-heading font-black text-3xl tracking-tighter uppercase">
+            Inmaculado <span className="text-retro-green">Grid</span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-gray-600 font-mono mt-2 font-bold">
             Cruza países y posiciones. Tienes 9 intentos para resolver el tablero completo.
           </p>
         </header>
 
         {/* CONTADORES DE ESTADO */}
-        <div className="bg-cyber-card border border-cyber-border rounded-xl p-3 mb-6 flex justify-between items-center text-xs font-mono">
-          <span className="text-gray-400">Intentos disponibles:</span>
-          <span className={`font-bold ${attemptsLeft <= 3 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
+        <div className="bg-white border-2 border-retro-dark rounded-none p-3 mb-6 flex justify-between items-center text-xs font-mono font-bold shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]">
+          <span className="text-retro-dark">Intentos disponibles:</span>
+          <span className={`${attemptsLeft <= 3 ? 'text-retro-red' : 'text-retro-dark'} bg-retro-yellow px-2 py-0.5 border border-retro-dark`}>
             {attemptsLeft} / 9
           </span>
         </div>
 
         {/* MENSAJES DE FIN DE JUEGO */}
         {gameStatus === 'WON' && (
-          <div className="bg-cyber-neon/10 border border-cyber-neon text-cyber-neon text-center rounded-xl p-4 mb-4 text-sm font-bold">
-            🏆 ¡Tablero Impecable Completado! Eres un experto en estadísticas de fútbol.
+          <div className="bg-retro-yellow border-2 border-retro-dark text-retro-dark text-center rounded-none p-4 mb-4 text-sm font-bold font-mono uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(17,24,39,1)]">
+            🏆 ¡TABLERO IMPECABLE COMPLETADO!
           </div>
         )}
         {gameStatus === 'LOST' && (
-          <div className="bg-red-500/10 border border-red-500 text-red-500 text-center rounded-xl p-4 mb-4 text-sm font-bold">
-            ❌ Fin del juego. Te has quedado sin intentos. ¡Mañana habrá un nuevo reto!
+          <div className="bg-retro-red border-2 border-retro-dark text-retro-cream text-center rounded-none p-4 mb-4 text-sm font-bold font-mono uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(17,24,39,1)]">
+            ❌ FIN DEL JUEGO - SIN INTENTOS
           </div>
         )}
 
         {/* LA REJILLA / GRID EN CSS GRID (Estructura 4x4 incluyendo cabeceras) */}
-        <div className="grid grid-cols-4 gap-2 w-full aspect-square bg-black/20 border border-cyber-border rounded-2xl p-2 relative">
+        <div className="grid grid-cols-4 gap-2 w-full aspect-square bg-white border-2 border-retro-dark rounded-none p-2 relative shadow-[4px_4px_0px_0px_rgba(17,24,39,1)]">
           
           {/* Esquina superior izquierda vacía */}
-          <div className="flex items-center justify-center text-[9px] font-mono text-gray-600 uppercase">
+          <div className="flex items-center justify-center text-[9px] font-mono text-retro-dark font-bold uppercase">
             futgames
           </div>
 
           {/* Cabeceras de las Columnas (X) */}
           {GRID_CRITERIOS.cols.map((col) => (
-            <div key={col.id} className="flex items-center justify-center text-center bg-cyber-card/40 border border-cyber-border/40 rounded-xl px-1 text-[10px] font-bold text-gray-300 font-mono">
+            <div key={col.id} className="flex items-center justify-center text-center bg-retro-yellow border-2 border-retro-dark rounded-none px-1 text-[10px] font-bold text-retro-dark font-mono uppercase">
               {col.name}
             </div>
           ))}
 
           {/* Renderizado de Filas con sus respectivas Celdas */}
           {GRID_CRITERIOS.rows.map((row, rowIndex) => (
-            <div key={row.id || rowIndex} className="contents"> {/* O la clase de layout que uses */}
+            <div key={row.id || rowIndex} className="contents">
               {/* Cabecera de la Fila (Y) */}
-              <div className="flex items-center justify-center ...">
+              <div className="flex items-center justify-center text-[9px] font-mono font-bold text-retro-dark uppercase border-2 border-retro-dark bg-retro-yellow rounded-none">
                 {row.name}
               </div>
 
@@ -175,16 +174,16 @@ export default function ImmaculateGridPage() {
                     key={cellKey}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                     disabled={gameStatus !== 'PLAYING' || !!solvedPlayer}
-                    className={`aspect-square rounded-xl flex flex-col items-center justify-center border transition-all duration-200 overflow-hidden ${
+                    className={`aspect-square rounded-none flex flex-col items-center justify-center border-2 transition-all duration-200 overflow-hidden font-bold ${
                       solvedPlayer 
-                        ? 'border-cyber-neon p-0 bg-transparent' 
-                        : 'bg-cyber-card/80 border-dashed border-gray-700 hover:border-cyber-neon hover:bg-cyber-card cursor-pointer'
+                        ? 'border-retro-dark p-0 bg-transparent' 
+                        : 'bg-retro-cream border-retro-dark hover:border-retro-dark hover:bg-white cursor-pointer shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]'
                     }`}
                   >
                     {solvedPlayer ? (
-                      <PlayerCard player={solvedPlayer} size="sm" />
+                      <PlayerCard player={solvedPlayer} compact />
                     ) : (
-                      <span className="text-gray-600 text-lg font-bold group-hover:text-white">+</span>
+                      <span className="text-retro-dark text-2xl font-bold">+</span>
                     )}
                   </button>
                 );
@@ -195,12 +194,12 @@ export default function ImmaculateGridPage() {
 
         {/* MODAL / DRAWER INTERACTIVO DE BÚSQUEDA DE JUGADORES */}
         {selectedCell !== null && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center z-50 p-4">
-            <div className="w-full max-w-md bg-cyber-card border border-cyber-border rounded-t-2xl sm:rounded-2xl p-6 neon-glow-sm flex flex-col">
+          <div className="fixed inset-0 bg-retro-dark/80 flex flex-col justify-end sm:justify-center items-center z-50 p-4">
+            <div className="w-full max-w-md bg-white border-3 border-retro-dark rounded-none p-6 shadow-[8px_8px_0px_0px_rgba(17,24,39,1)] flex flex-col">
               
-              <header className="mb-4">
-                <h3 className="text-sm font-mono text-cyber-neon uppercase tracking-wider font-bold">Adivinar Futbolista</h3>
-                <p className="text-xs text-gray-400 mt-1">Introduce el nombre de un jugador que cumpla ambos requisitos.</p>
+              <header className="mb-4 border-b-2 border-retro-dark pb-3">
+                <h3 className="text-sm font-mono text-retro-green font-bold uppercase tracking-wider">Adivinar Futbolista</h3>
+                <p className="text-xs text-gray-600 mt-1 font-mono font-bold">Introduce el nombre de un jugador que cumpla ambos requisitos.</p>
               </header>
 
               {/* Input de Búsqueda Reactivo */}
@@ -210,7 +209,7 @@ export default function ImmaculateGridPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Ej: Casillas, Messi, R9..."
-                className="w-full bg-black/40 border border-cyber-border rounded-xl px-4 py-3 text-sm text-white focus:border-cyber-neon focus:outline-none font-sans mb-4"
+                className="w-full bg-retro-cream border-2 border-retro-dark rounded-none px-4 py-2 text-xs text-retro-dark focus:border-retro-dark focus:outline-none font-mono font-bold mb-4"
               />
 
               {/* Resultados del Filtro de Búsqueda */}
@@ -221,28 +220,28 @@ export default function ImmaculateGridPage() {
                       <button
                         key={player.id}
                         onClick={() => handleGuessPlayer(player)}
-                        className="w-full bg-black/20 border border-cyber-border/60 hover:border-cyber-neon p-3 rounded-xl flex justify-between items-center text-left text-xs transition-all cursor-pointer text-white"
+                        className="w-full bg-white border-2 border-retro-dark hover:bg-retro-yellow p-3 rounded-none flex justify-between items-center text-left text-xs transition-all cursor-pointer text-retro-dark font-bold shadow-[1px_1px_0px_0px_rgba(17,24,39,1)]"
                       >
                         <span className="font-semibold">{player.name}</span>
-                        <span className="font-mono text-[10px] text-gray-400 uppercase bg-cyber-card px-2 py-0.5 rounded">
+                        <span className="font-mono text-[10px] text-retro-dark uppercase bg-retro-cream px-2 py-0.5 border border-retro-dark">
                           {player.position}
                         </span>
                       </button>
                     ))
                   ) : (
-                    <div className="text-center py-4 text-xs text-gray-500 font-mono">No se encontraron jugadores disponibles.</div>
+                    <div className="text-center py-4 text-xs text-gray-600 font-mono font-bold">No se encontraron jugadores disponibles.</div>
                   )
                 ) : (
-                  <div className="text-center py-4 text-xs text-gray-500 font-mono">Escribe un carácter para iniciar la búsqueda.</div>
+                  <div className="text-center py-4 text-xs text-gray-600 font-mono font-bold">Escribe un carácter para iniciar la búsqueda.</div>
                 )}
               </div>
 
               {/* Botón de Cierre */}
               <button
                 onClick={() => setSelectedCell(null)}
-                className="mt-6 text-xs font-mono text-gray-500 hover:text-white uppercase tracking-wider self-center"
+                className="mt-6 text-xs font-mono text-retro-red hover:text-retro-dark font-bold uppercase tracking-wider self-center"
               >
-                • Cerrar Ventana •
+                • CERRAR VENTANA •
               </button>
 
             </div>

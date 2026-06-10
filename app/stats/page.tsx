@@ -1,6 +1,5 @@
 // app/stats/page.tsx
 import { sql } from '@vercel/postgres';
-import { syne } from '@/app/ui/fonts';
 import Link from 'next/link';
 
 // Forzamos a Next.js a no cachear estáticamente esta página de forma indefinida, 
@@ -38,7 +37,7 @@ export default async function StatsPage() {
   const totalGlobalTitles = countriesRanking.reduce((sum, country) => sum + Number(country.titles), 0);
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-white p-4 md:p-8 flex flex-col items-center">
+    <div className="min-h-screen bg-retro-cream text-retro-dark p-4 md:p-8 flex flex-col items-center">
       
       {/* CONTENEDOR DE ANCHO MÁXIMO (MOBILE-FIRST) */}
       <div className="w-full max-w-md flex flex-col">
@@ -46,30 +45,30 @@ export default async function StatsPage() {
         {/* ENLACE DE RETORNO AL JUEGO */}
         <Link 
           href="/" 
-          className="text-xs font-mono text-cyber-neon hover:underline mb-6 flex items-center gap-1 self-start"
+          className="text-xs font-mono text-retro-green hover:underline mb-6 flex items-center gap-1 self-start font-bold"
         >
           ← volver al campo de juego
         </Link>
 
         {/* CABECERA DE LA PÁGINA */}
         <header className="mb-6">
-          <h1 className={`${syne.className} font-extrabold text-3xl tracking-tighter text-white lowercase`}>
-            palmarés <span className="text-cyber-neon">mundial</span>
+          <h1 className="retro-heading font-black text-3xl tracking-tighter text-retro-dark uppercase">
+            Palmarés <span className="text-retro-green">Mundial</span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-gray-600 mt-2 font-mono font-bold">
             Historial colectivo en tiempo real de torneos conquistados por comunidad.
           </p>
         </header>
 
         {/* PANEL DE ESTADÍSTICAS GENERALES */}
-        <section className="bg-cyber-card border border-cyber-border rounded-xl p-4 mb-6 flex justify-between items-center text-xs font-mono">
+        <section className="bg-white border-2 border-retro-dark rounded-none p-4 mb-6 flex justify-between items-center text-xs font-mono font-bold shadow-[2px_2px_0px_0px_rgba(17,24,39,1)]">
           <div>
-            <span className="text-gray-400 block uppercase text-[9px] tracking-wider">Total Torneos</span>
-            <span className="text-white font-bold text-base">{totalGlobalTitles}</span>
+            <span className="text-gray-600 block uppercase text-[9px] tracking-wider">Total Torneos</span>
+            <span className="text-retro-dark font-black text-base">{totalGlobalTitles}</span>
           </div>
           <div className="text-right">
-            <span className="text-gray-400 block uppercase text-[9px] tracking-wider">Líder Actual</span>
-            <span className="text-cyber-neon font-bold text-base">
+            <span className="text-gray-600 block uppercase text-[9px] tracking-wider">Líder Actual</span>
+            <span className="text-retro-green font-black text-base">
               {countriesRanking[0]?.titles > 0 ? countriesRanking[0].name : 'Ninguno'}
             </span>
           </div>
@@ -77,26 +76,26 @@ export default async function StatsPage() {
 
         {/* TRATAMIENTO DE EXCEPCIONES EN UI */}
         {errorMsg && (
-          <div className="bg-red-500/10 border border-red-500 rounded-xl p-4 text-center text-sm text-red-400">
+          <div className="bg-retro-red border-2 border-retro-dark rounded-none p-4 text-center text-sm text-retro-cream font-bold font-mono">
             {errorMsg}
           </div>
         )}
 
         {/* TABLA COMPACTA DEL RANKING PREMIUM */}
         {!errorMsg && (
-          <section className="bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden neon-glow-sm">
+          <section className="bg-white border-3 border-retro-dark rounded-none overflow-hidden shadow-[4px_4px_0px_0px_rgba(17,24,39,1)]">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-black/20 border-b border-cyber-border text-gray-400 text-[10px] font-mono uppercase tracking-wider">
+                <tr className="bg-retro-yellow border-b-3 border-retro-dark text-retro-dark text-[10px] font-mono font-bold uppercase tracking-wider">
                   <th className="py-3 px-4 text-center w-12">Pos</th>
                   <th className="py-3 px-4">Selección Nacional</th>
                   <th className="py-3 px-4 text-right pr-6">Mundiales</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-cyber-border/40 text-sm">
+              <tbody className="divide-y divide-retro-dark text-sm">
                 {countriesRanking.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="py-6 text-center text-xs text-gray-500 font-mono">
+                    <td colSpan={3} className="py-6 text-center text-xs text-gray-600 font-mono font-bold">
                       No hay registros de victorias aún.
                     </td>
                   </tr>
@@ -107,34 +106,34 @@ export default async function StatsPage() {
                     return (
                       <tr 
                         key={country.id} 
-                        className="hover:bg-white/[0.02] transition-colors"
+                        className={`${isTopThree ? 'bg-retro-yellow/20' : 'bg-white'} hover:bg-retro-cream transition-colors`}
                       >
                         {/* COLUMNA 1: POSICIÓN EN EL RANKING */}
                         <td className="py-3.5 px-4 text-center font-mono font-bold">
                           <span className={
-                            index === 0 && country.titles > 0 ? 'text-[#F5AF19]' :
-                            index === 1 && country.titles > 0 ? 'text-[#8E9EAB]' :
-                            index === 2 && country.titles > 0 ? 'text-[#CD7F32]' : 'text-gray-400'
+                            index === 0 && country.titles > 0 ? 'text-retro-red' :
+                            index === 1 && country.titles > 0 ? 'text-retro-green' :
+                            index === 2 && country.titles > 0 ? 'text-retro-dark' : 'text-gray-400'
                           }>
                             #{index + 1}
                           </span>
                         </td>
 
                         {/* COLUMNA 2: NOMBRE DEL PAÍS */}
-                        <td className="py-3.5 px-4 font-medium text-white">
+                        <td className="py-3.5 px-4 font-bold text-retro-dark">
                           <div className="flex items-center gap-2">
-                            <span>{country.name}</span>
+                            <span className="font-mono">{country.name}</span>
                             {index === 0 && country.titles > 0 && (
-                              <span className="text-[10px] bg-[#F5AF19]/10 text-[#F5AF19] border border-[#F5AF19]/30 px-1.5 py-0.2 rounded font-sans uppercase font-extrabold tracking-tighter">
-                                rey
+                              <span className="text-[9px] bg-retro-red text-retro-cream border-2 border-retro-dark px-2 py-0.5 rounded-none font-mono uppercase font-extrabold tracking-tighter">
+                                👑 REY
                               </span>
                             )}
                           </div>
                         </td>
 
                         {/* COLUMNA 3: TOTAL DE TÍTULOS */}
-                        <td className="py-3.5 px-4 text-right pr-6 font-mono font-bold text-cyber-neon">
-                          <span className={country.titles === 0 ? 'text-gray-600' : 'text-cyber-neon'}>
+                        <td className="py-3.5 px-4 text-right pr-6 font-mono font-bold">
+                          <span className={country.titles === 0 ? 'text-gray-400' : 'text-retro-green font-black text-lg'}>
                             {country.titles}
                           </span>
                         </td>
