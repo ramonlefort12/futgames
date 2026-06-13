@@ -83,15 +83,19 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
             {FORMATIONS[game.currentFormation].lines.map((line, idx) => (
               <div key={idx} className="flex justify-around items-center w-full z-10 min-h-[70px]">
                 {line.map((sKey) => {
-                  const key = String(sKey);
-                  const slot = game.lineup[key];
-                  
-                  return slot ? (
-                    <SlotRenderer 
-                      key={key} 
-                      slotKey={key} 
-                      state={slot} 
-                      onClick={() => game.handleSlotClick(key, slot.position)} 
+                  const key = sKey as keyof typeof game.lineup;
+
+                  return game.lineup[key] ? (
+                    <SlotRenderer
+                      key={String(key)}
+                      slotKey={key}
+                      state={game.lineup[key]}
+                      onClick={() =>
+                        game.handleSlotClick(
+                          key,
+                          game.lineup[key]!.position
+                        )
+                      }
                     />
                   ) : null;
                 })}
