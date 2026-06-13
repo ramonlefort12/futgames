@@ -2,9 +2,15 @@
 
 import { useEffect } from 'react';
 
+// Declaración global para que TypeScript sepa que adsbygoogle existe
+declare global {
+  interface Window {
+    adsbygoogle: any;
+  }
+}
+
 export default function AdBanner() {
   useEffect(() => {
-    // Esto asegura que el anuncio se inicialice solo en el cliente
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
