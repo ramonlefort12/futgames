@@ -420,10 +420,9 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
                   Draft Pick
                 </div>
 
-                <div className="text-center mb-5 w-full border-b-2 border-retro-dark pb-3">
-                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider font-bold">Posición: {game.lineup[game.activeSlot]?.position}</span>
-                  <h2 className="retro-heading text-2xl text-retro-green mt-0.5">{game.currentCountryOptions.name}</h2>
-                </div>
+                <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider font-bold">
+                  Posición: {String(game.lineup[game.activeSlot]?.position ?? 'N/A')}
+                </span>
 
                 <div className="w-full overflow-x-auto pb-4 pt-2 px-2 flex gap-4 justify-start sm:justify-center items-stretch snap-x scrollbar-thin">
                   {game.draftCandidates.length > 0 ? (
