@@ -81,25 +81,21 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
         <div ref={pitchRef} className="w-[380px] bg-white border-3 border-retro-dark p-4 aspect-[3/4] flex flex-col justify-between gap-2 relative">
           <div className="absolute inset-0 border-8 border-retro-green/10 pointer-events-none"></div>
             {FORMATIONS[game.currentFormation].lines.map((line, idx) => (
-            <div key={idx} className="flex justify-around items-center w-full min-h-[70px] z-10">
-              {line.map((pos) => {
-                // 1. Convertimos la posición a string explícitamente antes de usarla
-                const sKey = String(pos);
-                
-                // 2. Accedemos usando el índice de string
-                const slot = game.lineup[sKey];
-                
-                return slot ? (
-                  <SlotRenderer 
-                    key={sKey} 
-                    slotKey={sKey} 
-                    state={slot} 
-                    // 3. Pasamos sKey como string al manejador
-                    onClick={() => game.handleSlotClick(sKey, slot.position)} 
-                  />
-                ) : null;
-              })}
-            </div>
+              <div key={idx} className="flex justify-around items-center w-full z-10 min-h-[70px]">
+                {line.map((sKey) => {
+                  const key = String(sKey);
+                  const slot = game.lineup[key];
+                  
+                  return slot ? (
+                    <SlotRenderer 
+                      key={key} 
+                      slotKey={key} 
+                      state={slot} 
+                      onClick={() => game.handleSlotClick(key, slot.position)} 
+                    />
+                  ) : null;
+                })}
+              </div>
             ))}
         </div>
         <div ref={statsCardRef} className="w-[380px] border-3 border-retro-dark bg-white mt-4">
