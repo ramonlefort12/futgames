@@ -8,15 +8,15 @@ if (!connectionString) {
   throw new Error('POSTGRES_URL no está definida en las variables de entorno.');
 }
 
-// Ampliamos la interfaz global de TypeScript para que reconozca la propiedad 'sql'
 declare global {
-  var sql: ReturnType<typeof postgres> | undefined;
+  // eslint-disable-next-line no-var
+  var sql: postgres.Sql | undefined;
 }
 
-// Implementación del patrón Singleton
-const sql = globalThis.sql || postgres(connectionString, {
-  max: 10, // Límite de conexiones simultáneas por instancia
-  idle_timeout: 20, // Cierra conexiones inactivas tras 20s
+// Aquí está el cambio: definimos explícitamente el tipo de la constante
+const sql: postgres.Sql = globalThis.sql || postgres(connectionString, {
+  max: 10,
+  idle_timeout: 20,
 });
 
 if (process.env.NODE_ENV !== 'production') {
