@@ -4,12 +4,9 @@ import { Country, CountryStat, Player, Position, RivalTeam } from '@/lib/definit
 
 /**
  * Obtiene el palmarés de países filtrado por nombre.
- * @param query Texto de búsqueda (case-insensitive).
  */
 export async function getCountryStats(query: string): Promise<CountryStat[]> {
   try {
-    // Usamos ILIKE para búsquedas insensibles a mayúsculas/minúsculas.
-    // Ordenamos primariamente por títulos y secundariamente por participaciones.
     const stats = await sql<CountryStat[]>`
       SELECT 
         id, 
@@ -20,7 +17,6 @@ export async function getCountryStats(query: string): Promise<CountryStat[]> {
       WHERE name ILIKE ${'%' + query + '%'}
       ORDER BY tournament_titles DESC, tournaments_played DESC, name ASC
     `;
-    
     return stats;
   } catch (error) {
     console.error('Database Error:', error);
@@ -34,11 +30,11 @@ export async function getCountryStats(query: string): Promise<CountryStat[]> {
 export async function getCountries(): Promise<Record<string, Country>> {
   try {
     const countriesArray = await sql<Country[]>`
-      SELECT id, name, flag_url AS "flagUrl", titles_count AS "titlesCount", tournaments_played AS "tournamentsPlayed", tournament_titles AS "tournamentTitles"
+      SELECT id, name, flag_url AS "flagUrl", titles_count AS "titlesCount", 
+             tournaments_played AS "tournamentsPlayed", tournament_titles AS "tournamentTitles"
       FROM countries
     `;
     
-    // Transformamos el array devuelto por Postgres al Record<string, Country> que espera tu app
     const countriesRecord: Record<string, Country> = {};
     countriesArray.forEach((country: Country) => {
       countriesRecord[country.id] = country;
@@ -53,15 +49,13 @@ export async function getCountries(): Promise<Record<string, Country>> {
 
 /**
  * Filtra jugadores por país y posición.
- * Lógica trasladada a nivel de base de datos para reducir la carga de procesamiento en Node.js.
  */
 export async function getPlayersByCountryAndPosition(
   countryId: string, 
   position: Position | string
 ): Promise<Player[]> {
   try {
-    // Usamos una subconsulta con ARRAY() para empaquetar las posiciones secundarias.
-    // Esto evita duplicar filas en el pipeline de ejecución de Postgres antes de filtrar.
+    // CORREGIDO: Eliminada la coma extra antes del FROM
     const players = await sql<Player[]>`
       SELECT 
         p.id, 
@@ -77,10 +71,11 @@ export async function getPlayersByCountryAndPosition(
         ) AS "otherPositions", 
         p.rating, 
         p.world_cup_edition AS "worldCupEdition",
+        p.image_url AS "imageUrl"
       FROM players p
       WHERE p.country_id = ${countryId}
         AND (
-          p.position = ${position} 
+          p.primary_position = ${position} 
           OR EXISTS (
             SELECT 1 FROM player_positions pp 
             WHERE pp.player_id = p.id AND pp.position_code = ${position}
@@ -97,8 +92,7 @@ export async function getPlayersByCountryAndPosition(
 }
 
 /**
- * Obtiene el catálogo completo de jugadores desde la base de datos Neon.
- * Utiliza una subconsulta ARRAY para mapear la relación 1:N de posiciones secundarias.
+ * Obtiene el catálogo completo de jugadores.
  */
 export async function getAllPlayers(): Promise<Player[]> {
   try {
@@ -116,7 +110,8 @@ export async function getAllPlayers(): Promise<Player[]> {
           WHERE pp.player_id = p.id
         ) AS "otherPositions", 
         p.rating, 
-        p.world_cup_edition AS "worldCupEdition"
+        p.world_cup_edition AS "worldCupEdition",
+        p.image_url AS "imageUrl"
       FROM players p
       ORDER BY p.rating DESC
     `;
@@ -128,11 +123,14 @@ export async function getAllPlayers(): Promise<Player[]> {
   }
 }
 
+/**
+ * Obtiene posiciones disponibles.
+ */
 export async function getPositions(): Promise<{ id: string; name: string }[]> {
   try {
-    // Asumo que tu tabla se llama 'positions' y tiene 'code' (ej. POR) y 'name' (ej. Portero)
+    // Asegúrate de que las columnas coincidan con tu DB (he usado code e id)
     const positionsRaw = await sql`
-      SELECT code AS id, name FROM positions
+      SELECT id, name FROM positions
     `;
     return positionsRaw as { id: string; name: string }[];
   } catch (error) {
@@ -141,9 +139,6 @@ export async function getPositions(): Promise<{ id: string; name: string }[]> {
   }
 }
 
-/**
- * Incrementa en 1 el contador de torneos jugados para un país específico.
- */
 export async function recordTournamentPlayed(countryName: string): Promise<void> {
   try {
     await sql`
@@ -157,9 +152,6 @@ export async function recordTournamentPlayed(countryName: string): Promise<void>
   }
 }
 
-/**
- * Incrementa en 1 el contador de títulos ganados para un país específico.
- */
 export async function recordTournamentWin(countryName: string): Promise<void> {
   try {
     await sql`
@@ -173,9 +165,6 @@ export async function recordTournamentWin(countryName: string): Promise<void> {
   }
 }
 
-/**
- * Obtiene todas las selecciones adversarias (actuales e históricas) desde Neon.
- */
 export async function getRivalTeams(): Promise<RivalTeam[]> {
   try {
     const rivals = await sql<RivalTeam[]>`
