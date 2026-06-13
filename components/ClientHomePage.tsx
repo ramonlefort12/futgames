@@ -82,7 +82,7 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
           <div className="absolute inset-0 border-8 border-retro-green/10 pointer-events-none"></div>
           {FORMATIONS[game.currentFormation].lines.map((line, idx) => (
             <div key={idx} className="flex justify-around items-center w-full min-h-[70px] z-10">
-              {line.map((sKey) => game.lineup[sKey] ? <SlotRenderer key={sKey} slotKey={sKey} state={game.lineup[sKey]} onClick={() => {}} /> : null)}
+              {line.map((sKey) => game.lineup[sKey as string] ? <SlotRenderer key={sKey} slotKey={sKey} state={game.lineup[sKey as string]} onClick={() => {}} /> : null)}
             </div>
           ))}
         </div>
