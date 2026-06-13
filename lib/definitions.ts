@@ -54,6 +54,8 @@ export interface GridPositionState {
   isLocked: boolean;    // Bloqueado una vez que el usuario confirma su elección
 }
 
+export type Lineup = Record<string, GridPositionState>;
+
 /**
  * Estado global de una sesión/partida del Torneo de Futgames.
  * Ideal para manejar el estado centralizado (React Context / useReducer).

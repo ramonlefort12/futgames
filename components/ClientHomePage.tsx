@@ -80,20 +80,22 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
       <div className="w-0 h-0 overflow-hidden opacity-0 pointer-events-none absolute">
         <div ref={pitchRef} className="w-[380px] bg-white border-3 border-retro-dark p-4 aspect-[3/4] flex flex-col justify-between gap-2 relative">
           <div className="absolute inset-0 border-8 border-retro-green/10 pointer-events-none"></div>
-          {FORMATIONS[game.currentFormation].lines.map((line, idx) => (
-            <div key={idx} className="flex justify-around items-center w-full min-h-[70px] z-10">
-              {line.map((sKey) => 
-                game.lineup[sKey as unknown as string] 
-                  ? <SlotRenderer 
-                      key={sKey} 
-                      slotKey={sKey} 
-                      state={game.lineup[sKey as unknown as string]} 
-                      onClick={() => game.handleSlotClick(sKey, game.lineup[sKey as unknown as string].position)} 
-                    /> 
-                  : null
-              )}
-            </div>
-          ))}
+        {FORMATIONS[game.currentFormation].lines.map((line, idx) => (
+          <div key={idx} className="flex justify-around items-center w-full min-h-[70px] z-10">
+            {line.map((sKey) => {
+              // Accedemos a la clave de forma segura
+              const slot = game.lineup[sKey as keyof typeof game.lineup];
+              return slot ? (
+                <SlotRenderer 
+                  key={sKey} 
+                  slotKey={sKey} 
+                  state={slot} 
+                  onClick={() => game.handleSlotClick(sKey, slot.position)} 
+                />
+              ) : null;
+            })}
+          </div>
+        ))}
         </div>
         <div ref={statsCardRef} className="w-[380px] border-3 border-retro-dark bg-white mt-4">
           <TournamentSummaryCard teamName={game.userTeamNameLabel.toUpperCase()} coachName={coachName} userRating={game.userRating} tournamentStatus={game.tournamentStatus} currentStageIndex={0} />
