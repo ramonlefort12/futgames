@@ -1,6 +1,6 @@
 // app/stats/page.tsx
 import { getCountryStats } from '@/app/lib/data';
-import Link from 'next/link';
+import { CountryStat } from '@/lib/definitions';
 import StatsSearch from './StatsSearch';
 
 // Forzamos la revalidación dinámica
@@ -15,7 +15,7 @@ export default async function StatsPage({
   const resolvedParams = await searchParams;
   const query = resolvedParams?.query || '';
   
-  let countriesRanking = [];
+  let countriesRanking: CountryStat[] = [];
   let errorMsg = '';
 
   try {

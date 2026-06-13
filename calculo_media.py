@@ -1,4 +1,5 @@
 import os
+import urllib.parse
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
@@ -10,25 +11,42 @@ def get_best_eleven_average(country_id: str, edition: int = 2026) -> float:
     """
     Calcula la media del mejor 11 titular para una selección y edición dadas.
     """
-    db_url = os.getenv("POSTGRES_URL")
+    # 1. Recuperamos la URL (Priorizamos la URL directa sin pooler si existe)
+    db_url = os.getenv("POSTGRES_URL_NON_POOLING") or os.getenv("POSTGRES_URL")
+    
     if not db_url:
         raise ValueError("La variable de entorno POSTGRES_URL no está definida.")
 
-    # 1. Extracción de Datos (I/O)
+    # 2. Disección Segura de URI (Resolución del error DSN)
+    # Esto aísla los componentes de red ignorando los parámetros conflictivos como "?supa="
+    result = urllib.parse.urlparse(db_url)
+    username = result.username
+    password = result.password
+    database = result.path[1:] # Se omite el '/' inicial
+    hostname = result.hostname
+    port = result.port
+
+    # 3. Extracción de Datos (I/O)
     try:
-        conn = psycopg2.connect(db_url)
+        # Conexión paramétrica explícita con cifrado forzado
+        conn = psycopg2.connect(
+            database=database,
+            user=username,
+            password=password,
+            host=hostname,
+            port=port,
+            sslmode='require' # Obligatorio para conexiones remotas a Neon/Supabase
+        )
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-        # Obtenemos TODOS los jugadores del país ordenados por rating.
-        # Usamos una subconsulta ARRAY para las posiciones secundarias, igual que en la API.
         query = """
             SELECT 
                 p.id, 
                 p.name, 
                 p.rating, 
-                p.position AS main_pos,
+                p.primary_position AS main_pos,
                 ARRAY(
-                    SELECT pp.position 
+                    SELECT pp.position_code 
                     FROM player_positions pp 
                     WHERE pp.player_id = p.id
                 ) AS other_pos
@@ -46,27 +64,25 @@ def get_best_eleven_average(country_id: str, edition: int = 2026) -> float:
         if 'cursor' in locals(): cursor.close()
         if 'conn' in locals(): conn.close()
 
-    # 2. Definición del modelo del equipo (Formación 4-3-3 Clásica)
+    # 4. Definición del modelo del equipo (Formación 4-3-3 Clásica)
     target_formation = ['POR', 'LD', 'DFC', 'DFC', 'LI', 'MC', 'MC', 'MCO', 'ED', 'DC', 'EI']
     
-    selected_players = set() # Set para búsqueda O(1) de IDs ya seleccionados
+    selected_players = set() 
     team_ratings = []
     
-    # 3. Algoritmo Voraz (Greedy) de Asignación
+    # 5. Algoritmo Voraz (Greedy) de Asignación O(N * M)
     for target_pos in target_formation:
         best_candidate = None
         
-        # Iteramos sobre los jugadores (ya vienen ordenados por rating de mayor a menor)
         for p in players:
             if p['id'] in selected_players:
                 continue
             
-            # Verificamos si el jugador domina la posición buscada
             valid_positions = [p['main_pos']] + (p['other_pos'] if p['other_pos'] else [])
             
             if target_pos in valid_positions:
                 best_candidate = p
-                break # Al estar ordenados por rating, el primero que encaja es el mejor posible
+                break 
                 
         if best_candidate:
             selected_players.add(best_candidate['id'])
@@ -75,7 +91,7 @@ def get_best_eleven_average(country_id: str, edition: int = 2026) -> float:
         else:
             print(f"⚠️ Alerta: No se encontró jugador disponible para la posición {target_pos}")
 
-    # 4. Cálculo de la media
+    # 6. Cálculo de la media
     if not team_ratings:
         return 0.0
         
@@ -83,7 +99,6 @@ def get_best_eleven_average(country_id: str, edition: int = 2026) -> float:
     return round(average, 2)
 
 if __name__ == "__main__":
-    # Ejemplo de ejecución para España en el Mundial 2026
     country_code = 'esp'
     print(f"--- Generando mejor 11 para {country_code.upper()} (Mundial 2026) ---")
     
