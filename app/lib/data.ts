@@ -130,11 +130,15 @@ export async function getAllPlayers(): Promise<Player[]> {
  */
 export async function getPositions(): Promise<{ id: string; name: string }[]> {
   try {
-    // Asegúrate de que las columnas coincidan con tu DB (he usado code e id)
     const positionsRaw = await sql`
       SELECT id, name FROM positions
     `;
-    return positionsRaw as { id: string; name: string }[];
+
+    return positionsRaw.map((row) => ({
+      id: row.id as string,
+      name: row.name as string,
+    }));
+    
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch positions from database.');
