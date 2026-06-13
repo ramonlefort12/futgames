@@ -130,10 +130,11 @@ export async function getAllPlayers(): Promise<Player[]> {
  */
 export async function getPositions(): Promise<{ id: string; name: string }[]> {
   try {
+    // Si descubres que la columna se llama 'code', cámbialo aquí:
     const positionsRaw = await sql`
-      SELECT id, name FROM positions
+      SELECT code AS id, name FROM positions
     `;
-
+    
     return positionsRaw.map((row) => ({
       id: row.id as string,
       name: row.name as string,
