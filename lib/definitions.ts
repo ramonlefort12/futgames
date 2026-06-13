@@ -63,16 +63,17 @@ export interface LineupState {
  * Ideal para manejar el estado centralizado (React Context / useReducer).
  */
 export interface TournamentGameState {
-  id: string;               // ID único de la sesión de juego
+  id: string;
   currentStep: 'START' | 'DRAFT' | 'SIMULATION' | 'RESULTS';
-  userSelectionId: string | null; // Selección que el usuario eligió defender al inicio
-  lineup: Record<Position, GridPositionState>; // Tu 11 ideal estructurado
+  userSelectionId: string | null;
+  lineup: Record<string, GridPositionState>; 
   tournamentBracket: {
     quarters: MatchSimulation[];
     semis: MatchSimulation[];
     final: MatchSimulation[];
   } | null;
-  hasWon: boolean | null;   // Resultado de la final
+  
+  hasWon: boolean | null;
 }
 
 /**

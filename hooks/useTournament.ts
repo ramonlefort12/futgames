@@ -57,7 +57,12 @@ export function useTournaments(
     const selectedFormation = FORMATIONS[currentFormation];
     const newState = {} as Record<string, GridPositionState>;
     selectedFormation.lines.flat().forEach((pos) => {
-      newState[pos] = { position: pos.replace(/\d/g, '') as Position, assignedCountry: null, selectedPlayer: null, isLocked: false };
+      newState[pos] = { 
+        position: pos.replace(/\d/g, '') as unknown as Position, 
+        assignedCountry: null, 
+        selectedPlayer: null, 
+        isLocked: false 
+      };
     });
     setLineup(newState);
     setView('PLAY');
@@ -147,10 +152,12 @@ export function useTournaments(
     if (randomCountries.length === 0) return;
     const selectedCountry = randomCountries[0];
     
-    const rawCandidates = initialPlayers.filter(
-      (player) => player.countryId === selectedCountry.id && 
-                  (player.position === position || player.otherPositions.includes(position))
-    );
+    const rawCandidates = initialPlayers.filter((player) => {
+      if (player.countryId !== selectedCountry.id) return false;
+      const playerPos = String(player.position);
+      const targetPos = String(position);
+      return playerPos === targetPos || player.otherPositions.map(String).includes(targetPos);
+    });
     
     const playersInLineupIds = Object.values(lineup).map(slot => slot.selectedPlayer?.id).filter(Boolean);
     const availableCandidates = rawCandidates.filter(player => !playersInLineupIds.includes(player.id));
