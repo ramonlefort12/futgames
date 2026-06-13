@@ -56,7 +56,7 @@ export async function getPlayersByCountryAndPosition(
 ): Promise<Player[]> {
   try {
     // CORREGIDO: Eliminada la coma extra antes del FROM
-    const players = await sql<Player[]>`
+    const players = await (sql`
       SELECT 
         p.id, 
         p.name, 
@@ -70,8 +70,7 @@ export async function getPlayersByCountryAndPosition(
           WHERE pp.player_id = p.id
         ) AS "otherPositions", 
         p.rating, 
-        p.world_cup_edition AS "worldCupEdition",
-        p.image_url AS "imageUrl"
+        p.world_cup_edition AS "worldCupEdition"
       FROM players p
       WHERE p.country_id = ${countryId}
         AND (
@@ -82,7 +81,7 @@ export async function getPlayersByCountryAndPosition(
           )
         )
       ORDER BY p.rating DESC
-    `;
+    ` as Promise<Player[]>);
     
     return players;
   } catch (error) {
@@ -96,7 +95,7 @@ export async function getPlayersByCountryAndPosition(
  */
 export async function getAllPlayers(): Promise<Player[]> {
   try {
-    const players = await sql<Player[]>`
+    const players = await (sql`
       SELECT 
         p.id, 
         p.name, 
@@ -110,11 +109,10 @@ export async function getAllPlayers(): Promise<Player[]> {
           WHERE pp.player_id = p.id
         ) AS "otherPositions", 
         p.rating, 
-        p.world_cup_edition AS "worldCupEdition",
-        p.image_url AS "imageUrl"
+        p.world_cup_edition AS "worldCupEdition"
       FROM players p
       ORDER BY p.rating DESC
-    `;
+    ` as Promise<Player[]>);
     
     return players;
   } catch (error) {
