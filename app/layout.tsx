@@ -20,8 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${syne.variable}`}>
-      <body className={`${inter.className} antialiased bg-retro-cream min-h-screen flex flex-col`}>
+    <html lang="es" className={`${inter.className} ${syne.variable}`}>
+      <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536584632020794" crossorigin="anonymous"></script>
+      </head>
+      <body className={`font-sans antialiased bg-retro-cream min-h-screen flex flex-col`}>
         
         {/* Inyectamos la lógica del cliente sin afectar al servidor */}
         <KonamiProvider />

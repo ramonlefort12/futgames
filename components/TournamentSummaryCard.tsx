@@ -97,7 +97,7 @@ export default function TournamentSummaryCard({
 
       {/* Pie de Firma de Seguridad del Sistema */}
       <div className="w-full flex justify-between items-center border-t-3 border-retro-dark pt-3 text-[8px] font-mono text-gray-600 uppercase tracking-widest font-bold">
-        <span>futgames v2.1</span>
+        <span>footgames v2.1</span>
         <span className="text-retro-red">MUNDIAL '26</span>
       </div>
     </div>
