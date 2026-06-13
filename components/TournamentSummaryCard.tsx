@@ -19,7 +19,6 @@ export default function TournamentSummaryCard({
   currentStageIndex
 }: SummaryCardProps) {
   
-  // 1. LÓGICA DE CÁLCULO DE POSICIÓN FINAL DEL TORNEO
   let finalPosition = 'Fase de Grupos';
   if (tournamentStatus === 'CHAMPION') {
     finalPosition = '🥇 Campeón del Mundo';
@@ -31,8 +30,6 @@ export default function TournamentSummaryCard({
     finalPosition = 'Compitiendo...';
   }
 
-  // 2. DATOS AUXILIARES FIJOS DE RENDIMIENTO ESTADÍSTICO (Simulados para el Cromo de Redes)
-  // En la Fase 4/5 estos se mapearán dinámicamente desde tu array de jugadores elegidos
   const teamStar = "Kylian Mbappé";
   const topScorer = "Erling Haaland (5 goles)";
 
