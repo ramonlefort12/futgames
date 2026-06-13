@@ -1,14 +1,20 @@
 /**
- * Posiciones tácticas válidas en el terreno de juego.
- * Restringido por tipado para evitar strings arbitrarios.
+ * Modelo estricto para las estadísticas de una Selección Nacional.
  */
-export type Position = 'POR' | 'LI' | 'DFC' | 'LD' | 'MCO' | 'MC' | 'MCD' | 'EI' | 'ED' | 'DC';
+export interface CountryStat {
+  id: string;
+  name: string;
+  tournamentsPlayed: number;
+  tournamentTitles: number;
+}
 
 /**
- * Rarezas/Categorías disponibles para los cromos de los jugadores.
- * Determina el diseño visual CSS y los modificadores de probabilidad.
+ * Modelo estricto para una Posición de juego en el campo.
  */
-export type PlayerRarity = 'COMMON' | 'SILVER' | 'GOLD' | 'LEGEND' | 'MEME';
+export interface Position {
+  id: string; // Código único de la posición (ej: 'DC', 'MC', 'PT')
+  name: string; // Nombre completo de la posición (ej: 'Delantero Centro', 'Mediocampista Central', 'Portero')
+}
 
 /**
  * Modelo estricto para una Selección Nacional (País).
@@ -18,6 +24,8 @@ export interface Country {
   name: string;        // Nombre de la selección (ej: 'Argentina')
   flagUrl: string;     // Ruta local al SVG de la bandera en /public
   titlesCount: number; // Copas del Mundo ganadas (para la persistencia global)
+  tournamentsPlayed: number; // Torneos jugados por los usuarios
+  tournamentTitles: number; // Títulos de torneos ganados por los usuarios
 }
 
 /**
@@ -84,4 +92,13 @@ export interface DailyGridChallenge {
   rows: { type: 'COUNTRY' | 'CLUB'; value: string }[]; // Criterios de filas (ej: España, Real Madrid)
   cols: { type: 'COUNTRY' | 'CLUB' | 'STAT'; value: string }[]; // Criterios de columnas (ej: Brasil, +100 goles)
   matrixAnswers: Record<string, string[]>; // IDs de respuestas válidas por cada celda [row_index, col_index]
+}
+
+export interface TournamentUpdatePayload {
+  countryName: string;
+}
+
+export interface RivalTeam {
+  name: string;
+  baseRating: number;
 }
