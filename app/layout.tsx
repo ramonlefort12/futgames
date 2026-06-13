@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="es" className={`${inter.className} ${syne.variable}`}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-7536584632020794"></meta>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536584632020794" crossOrigin="anonymous" strategy="afterInteractive"></script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536584632020794" crossOrigin="anonymous"></script>
         </head>
       <body className={`font-sans antialiased bg-retro-cream min-h-screen flex flex-col`}>
         
