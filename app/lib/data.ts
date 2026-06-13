@@ -55,7 +55,10 @@ export async function getPlayersByCountryAndPosition(
   position: Position | string
 ): Promise<Player[]> {
   try {
-    // CORREGIDO: Eliminada la coma extra antes del FROM
+    // Forzamos las variables a string para que el tagged template no sufra al tipar
+    const cId = countryId as string;
+    const pos = position as string;
+
     const players = await (sql`
       SELECT 
         p.id, 
@@ -70,14 +73,15 @@ export async function getPlayersByCountryAndPosition(
           WHERE pp.player_id = p.id
         ) AS "otherPositions", 
         p.rating, 
-        p.world_cup_edition AS "worldCupEdition"
+        p.world_cup_edition AS "worldCupEdition",
+        p.image_url AS "imageUrl"
       FROM players p
-      WHERE p.country_id = ${countryId}
+      WHERE p.country_id = ${cId}
         AND (
-          p.primary_position = ${position} 
+          p.primary_position = ${pos} 
           OR EXISTS (
             SELECT 1 FROM player_positions pp 
-            WHERE pp.player_id = p.id AND pp.position_code = ${position}
+            WHERE pp.player_id = p.id AND pp.position_code = ${pos}
           )
         )
       ORDER BY p.rating DESC
