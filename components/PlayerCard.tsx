@@ -5,15 +5,19 @@ interface PlayerCardProps {
   player: Player;
   compact?: boolean;
   onClick?: () => void;
+  hideRating?: boolean; // Propiedad añadida para la mecánica del juego
 }
 
-export default function PlayerCard({ player, compact = false, onClick }: PlayerCardProps) {
+export default function PlayerCard({ player, compact = false, onClick, hideRating = false }: PlayerCardProps) {
   const playerName = player?.shortName || "Jugador Incógnito";
   const playerRating = player?.rating || 80;
   const playerPosition = player?.position || "MED";
   const playerNation = player?.countryId || "FIFA";
   const playerImage = player?.imageUrl || null;
   const worldCupYear = player?.worldCupEdition || "2026";
+
+  // Lógica de ocultación para el rating
+  const displayRating = hideRating ? '?' : playerRating;
 
   // VERSIÓN COMPACTA (Alineación interna de campo)
   if (compact) {
@@ -26,7 +30,7 @@ export default function PlayerCard({ player, compact = false, onClick }: PlayerC
           {playerName}
         </span>
         <div className="flex gap-1 justify-center mt-1 w-full text-[12px] font-mono font-bold">
-          <span className="text-retro-red">{playerRating}</span>
+          <span className="text-retro-red">{displayRating}</span>
           <span className="text-retro-green">{playerNation.substring(0, 2).toUpperCase()}</span>
         </div>
       </div>
@@ -75,7 +79,7 @@ export default function PlayerCard({ player, compact = false, onClick }: PlayerC
             </div>
             <div className="bg-retro-cream/50 p-1 border-2 border-retro-dark flex flex-col justify-center items-center">
               <span className="block text-[7px] text-gray-500 font-sans font-bold uppercase leading-none mb-0.5">RAT</span>
-              <span className="text-retro-red text-sm font-black leading-none">{playerRating}</span>
+              <span className="text-retro-red text-sm font-black leading-none">{displayRating}</span>
             </div>
             <div className="bg-retro-cream/50 p-1 border-2 border-retro-dark flex flex-col justify-center items-center">
               <span className="block text-[7px] text-gray-500 font-sans font-bold uppercase leading-none mb-0.5">PAÍS</span>

@@ -1,67 +1,43 @@
+// hooks/useTournament.ts
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Position, GridPositionState, Player, Country, MatchSimulation } from '@/lib/definitions';
-import { getPlayersByCountryAndPosition } from '@/app/lib/placeholder-data';
+import { Position, GridPositionState, Player, Country, MatchSimulation, TournamentUpdatePayload, RivalTeam } from '@/lib/definitions';
 import { generateRandomCountriesForDraft } from '@/app/lib/utils';
 
 export const FORMATIONS = {
-  '4-3-3': {
-    name: '4-3-3 Clásica',
-    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MC2', 'MC3'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
+  '4-3-3': { 
+    name: '4-3-3 Clásica', 
+    lines: [['EI', 'DC', 'ED'], ['MC', 'MC2', 'MC3'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
-  '4-3-3 - Of': {
-    name: '4-3-3 Ofensiva',
-    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MCO', 'MC2'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
+  '4-3-3 - Of': { 
+    name: '4-3-3 Ofensiva', 
+    lines: [['EI', 'DC', 'ED'], ['MC', 'MCO', 'MC2'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
-  '4-3-3 - Def': {
-    name: '4-3-3 Defensiva',
-    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MCD', 'MC2'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
+  '4-3-3 - Def': { 
+    name: '4-3-3 Defensiva', 
+    lines: [['EI', 'DC', 'ED'], ['MC', 'MCD', 'MC2'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
-  '4-4-2': {
-    name: '4-4-2 Tradicional',
-    lines: [['DC', 'DC2'] as Position[], ['EI', 'MC', 'MC2', 'ED'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]]
+  '4-4-2': { 
+    name: '4-4-2 Tradicional', 
+    lines: [['DC', 'DC2'], ['EI', 'MC', 'MC2', 'ED'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
-  '3-5-2': {
-    name: '3-5-2 Continental',
-    lines: [['DC', 'DC2'] as Position[], ['EI', 'MC', 'MCD', 'MC2', 'ED'] as Position[], ['LI', 'DFC', 'LD'] as Position[], ['POR'] as Position[]]
+  '3-5-2': { 
+    name: '3-5-2 Continental', 
+    lines: [['DC', 'DC2'], ['EI', 'MC', 'MCD', 'MC2', 'ED'], ['LI', 'DFC', 'LD'], ['POR']] 
   }
 };
-
 export type FormationType = keyof typeof FORMATIONS;
 export type TournamentStage = 'GRUPO J1' | 'GRUPO J2' | 'GRUPO J3' | 'OCTAVOS' | 'CUARTOS' | 'SEMIS' | 'FINAL';
-
 export interface GroupTeamState { name: string; rating: number; points: number; gf: number; gc: number; }
+export interface MatchSlot { id: string; t1: string; t2: string; score1?: number; score2?: number; w?: string; }
+export interface PlayoffBracket { octavos: MatchSlot[]; cuartos: MatchSlot[]; semis: MatchSlot[]; final: MatchSlot; }
 
-export interface MatchSlot {
-  id: string;
-  t1: string;
-  t2: string;
-  score1?: number;
-  score2?: number;
-  w?: string;
-}
-
-export interface PlayoffBracket {
-  octavos: MatchSlot[];
-  cuartos: MatchSlot[];
-  semis: MatchSlot[];
-  final: MatchSlot;
-}
-
-const WORLD_TEAMS_POOL = [
-  { name: 'Argentina', baseRating: 90 }, { name: 'Francia', baseRating: 89 },
-  { name: 'Brasil', baseRating: 88 }, { name: 'Inglaterra', baseRating: 88 },
-  { name: 'España', baseRating: 87 }, { name: 'Portugal', baseRating: 86 },
-  { name: 'Alemania', baseRating: 85 }, { name: 'Países Bajos', baseRating: 85 },
-  { name: 'Italia', baseRating: 84 }, { name: 'Marruecos', baseRating: 83 },
-  { name: 'Croacia', baseRating: 83 }, { name: 'Uruguay', baseRating: 82 },
-  { name: 'Japón', baseRating: 81 }, { name: 'Colombia', baseRating: 81 },
-  { name: 'Estados Unidos', baseRating: 80 }, { name: 'México', baseRating: 79 },
-  { name: 'Senegal', baseRating: 79 }, { name: 'Bélgica', baseRating: 82 }
-];
-
-export function useTournaments() {
+export function useTournaments(
+  initialCountries: Country[], 
+  initialPlayers: Player[], 
+  initialRivals: RivalTeam[]
+) {
   const [currentFormation, setCurrentFormation] = useState<FormationType>('4-3-3');
   const [lineup, setLineup] = useState<Record<string, GridPositionState>>({});
   const [view, setView] = useState<'PLAY' | 'TOURNAMENT_BRACKET'>('PLAY');
@@ -81,7 +57,12 @@ export function useTournaments() {
     const selectedFormation = FORMATIONS[currentFormation];
     const newState = {} as Record<string, GridPositionState>;
     selectedFormation.lines.flat().forEach((pos) => {
-      newState[pos] = { position: pos.replace(/\d/g, '') as Position, assignedCountry: null, selectedPlayer: null, isLocked: false };
+      newState[pos] = { 
+        position: pos.replace(/\d/g, '') as unknown as Position, 
+        assignedCountry: null, 
+        selectedPlayer: null, 
+        isLocked: false 
+      };
     });
     setLineup(newState);
     setView('PLAY');
@@ -98,10 +79,20 @@ export function useTournaments() {
     setGroupTeams(prev => prev.map(t => t.name === userTeamNameLabel ? { ...t, rating: userRating } : t));
   }, [userRating, userTeamNameLabel]);
 
+  const logTournamentStat = (type: 'play' | 'win', teamName: string) => {
+    const payload: TournamentUpdatePayload = { countryName: teamName };
+    fetch(`/api/tournaments/${type}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(err => console.error(`Error logging tournament ${type}:`, err));
+  };
+
   const initTournamentStructure = () => {
-    const shuffled = [...WORLD_TEAMS_POOL]
-      .filter(t => t.name.toLowerCase() !== userTeamNameLabel.toLowerCase())
+    const shuffled = [...initialRivals]
+      .filter(t => !t.name.toLowerCase().includes(userTeamNameLabel.toLowerCase()))
       .sort(() => Math.random() - 0.5);
+      
     const selectedRivals = shuffled.slice(0, 3);
     const initialGroup: GroupTeamState[] = [
       { name: userTeamNameLabel, rating: userRating, points: 0, gf: 0, gc: 0 },
@@ -113,22 +104,22 @@ export function useTournaments() {
     setTournamentStatus('PLAYING');
     setMatchesLog([]);
     setView('TOURNAMENT_BRACKET');
+    
+    logTournamentStat('play', userTeamNameLabel);
   };
 
   const getTeamRating = (teamName: string): number => {
     if (teamName === userTeamNameLabel) return userRating;
-    return WORLD_TEAMS_POOL.find(t => t.name === teamName)?.baseRating || 82;
+    return initialRivals.find(t => t.name === teamName)?.baseRating || 82;
   };
 
   const generateGlobalBracket = (userTeam: string) => {
-    const pool = [...WORLD_TEAMS_POOL]
-      .filter(t => t.name.toLowerCase() !== userTeam.toLowerCase() && !groupTeams.some(g => g.name === t.name))
+    const pool = [...initialRivals]
+      .filter(t => !t.name.toLowerCase().includes(userTeam.toLowerCase()) && !groupTeams.some(g => g.name === t.name))
       .sort(() => Math.random() - 0.5);
 
     const secondPlaceGroup = groupTeams[1]?.name || 'Rival IA';
 
-    // Generamos las llaves de Octavos simétricos (8 partidos en total)
-    // Lado Izquierdo (o1 - o4), Lado Derecho (o5 - o8)
     setBracket({
       octavos: [
         { id: 'o1', t1: userTeam, t2: pool[0].name },
@@ -156,10 +147,17 @@ export function useTournaments() {
 
   const handleSlotClick = (slotKey: string, position: Position) => {
     if (lineup[slotKey]?.isLocked) return;
-    const randomCountries = generateRandomCountriesForDraft();
+    
+    const randomCountries = generateRandomCountriesForDraft(initialCountries);
     if (randomCountries.length === 0) return;
     const selectedCountry = randomCountries[0];
-    const rawCandidates = getPlayersByCountryAndPosition(selectedCountry.id, position);
+    
+    const rawCandidates = initialPlayers.filter((player) => {
+      if (player.countryId !== selectedCountry.id) return false;
+      const playerPos = String(player.position);
+      const targetPos = String(position);
+      return playerPos === targetPos || player.otherPositions.map(String).includes(targetPos);
+    });
     
     const playersInLineupIds = Object.values(lineup).map(slot => slot.selectedPlayer?.id).filter(Boolean);
     const availableCandidates = rawCandidates.filter(player => !playersInLineupIds.includes(player.id));
@@ -237,7 +235,6 @@ export function useTournaments() {
 
     if (!bracket) return;
 
-    // SIMULACIÓN COMPLETA DE FASES ELIMINATORIAS (Alineado con el Bracket de Espejo)
     if (tournamentStage === 'OCTAVOS') {
       const simulatedOctavos = bracket.octavos.map(match => {
         const p1 = getTeamRating(match.t1);
@@ -321,11 +318,11 @@ export function useTournaments() {
       const simulatedFinal = { ...m, score1: sim.homeScore, score2: sim.awayScore, w: sim.winnerName };
 
       setMatchesLog(prev => [...prev, { id: m.id, homeTeamName: m.t1, awayTeamName: m.t2, homeScore: sim.homeScore, awayScore: sim.awayScore, isCompleted: true, winnerName: sim.winnerName }]);
-
       setBracket(prev => prev ? { ...prev, final: simulatedFinal } : null);
 
       if (simulatedFinal.w === userTeamNameLabel) {
         setTournamentStatus('CHAMPION');
+        logTournamentStat('win', userTeamNameLabel);
       } else {
         setTournamentStatus('ELIMINATED');
       }

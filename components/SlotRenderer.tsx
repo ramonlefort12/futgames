@@ -63,7 +63,7 @@ export default function SlotRenderer({ slotKey, state, onClick }: SlotRendererPr
           uppercase
         `}
       >
-        {state.position}
+        {String(state.position)}
       </span>
 
       {/* Badge flotante inferior estilo retro */}
