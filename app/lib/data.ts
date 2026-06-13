@@ -40,7 +40,7 @@ export async function getCountries(): Promise<Record<string, Country>> {
     
     // Transformamos el array devuelto por Postgres al Record<string, Country> que espera tu app
     const countriesRecord: Record<string, Country> = {};
-    countriesArray.forEach(country => {
+    countriesArray.forEach((country: Country) => {
       countriesRecord[country.id] = country;
     });
     
