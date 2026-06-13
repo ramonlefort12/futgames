@@ -1,17 +1,22 @@
+// app/lib/db.ts
+import 'server-only';
 import postgres from 'postgres';
 
-// Usamos POSTGRES_URL que es el estándar proporcionado por Neon
 const connectionString = process.env.POSTGRES_URL;
 
 if (!connectionString) {
   throw new Error('POSTGRES_URL no está definida en las variables de entorno.');
 }
 
-// Implementación del patrón Singleton para evitar agotar el pool de conexiones 
-// durante el Hot Module Replacement (HMR) en desarrollo.
+// Ampliamos la interfaz global de TypeScript para que reconozca la propiedad 'sql'
+declare global {
+  var sql: ReturnType<typeof postgres> | undefined;
+}
+
+// Implementación del patrón Singleton
 const sql = globalThis.sql || postgres(connectionString, {
   max: 10, // Límite de conexiones simultáneas por instancia
-  idle_timeout: 20, // Cierra conexiones inactivas tras 20s para liberar recursos en Neon
+  idle_timeout: 20, // Cierra conexiones inactivas tras 20s
 });
 
 if (process.env.NODE_ENV !== 'production') {
