@@ -8,23 +8,23 @@ import { generateRandomCountriesForDraft } from '@/app/lib/utils';
 export const FORMATIONS = {
   '4-3-3': { 
     name: '4-3-3 Clásica', 
-    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MC2', 'MC3'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]] 
+    lines: [['EI', 'DC', 'ED'], ['MC', 'MC2', 'MC3'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
   '4-3-3 - Of': { 
     name: '4-3-3 Ofensiva', 
-    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MCO', 'MC2'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]] 
+    lines: [['EI', 'DC', 'ED'], ['MC', 'MCO', 'MC2'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
   '4-3-3 - Def': { 
     name: '4-3-3 Defensiva', 
-    lines: [['EI', 'DC', 'ED'] as Position[], ['MC', 'MCD', 'MC2'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]] 
+    lines: [['EI', 'DC', 'ED'], ['MC', 'MCD', 'MC2'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
   '4-4-2': { 
     name: '4-4-2 Tradicional', 
-    lines: [['DC', 'DC2'] as Position[], ['EI', 'MC', 'MC2', 'ED'] as Position[], ['LI', 'DFC', 'DFC2', 'LD'] as Position[], ['POR'] as Position[]] 
+    lines: [['DC', 'DC2'], ['EI', 'MC', 'MC2', 'ED'], ['LI', 'DFC', 'DFC2', 'LD'], ['POR']] 
   },
   '3-5-2': { 
     name: '3-5-2 Continental', 
-    lines: [['DC', 'DC2'] as Position[], ['EI', 'MC', 'MCD', 'MC2', 'ED'] as Position[], ['LI', 'DFC', 'LD'] as Position[], ['POR'] as Position[]] 
+    lines: [['DC', 'DC2'], ['EI', 'MC', 'MCD', 'MC2', 'ED'], ['LI', 'DFC', 'LD'], ['POR']] 
   }
 };
 export type FormationType = keyof typeof FORMATIONS;
