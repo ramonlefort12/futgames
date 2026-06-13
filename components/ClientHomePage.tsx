@@ -398,8 +398,8 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
                 ) : (
                   <>
                     <div className="grid grid-cols-2 gap-3 w-full">
-                      <button onClick={() => handleExportGraphics(pitchRef, 'futgames-once', 'ONCE')} disabled={isExporting !== null} className="bg-white border-2 border-retro-dark text-retro-dark font-bold py-3 text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">📸 Guardar Alineación</button>
-                      <button onClick={() => handleExportGraphics(statsCardRef, 'futgames-stats', 'STATS')} disabled={isExporting !== null} className="bg-retro-yellow border-2 border-retro-dark text-retro-dark font-extrabold py-3 text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">📊 Ficha Técnica</button>
+                      <button onClick={() => handleExportGraphics(pitchRef, 'footgames-once', 'ONCE')} disabled={isExporting !== null} className="bg-white border-2 border-retro-dark text-retro-dark font-bold text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">📸 Guardar Alineación</button>
+                      <button onClick={() => handleExportGraphics(statsCardRef, 'footgames-stats', 'STATS')} disabled={isExporting !== null} className="bg-retro-yellow border-2 border-retro-dark text-retro-dark font-extrabold text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">📊 Ficha Técnica</button>
                     </div>
                     <div className="w-full grid grid-cols-2 gap-3">
                       <button onClick={() => { game.initTournamentStructure(); setSetupMode('SETUP'); }} className="bg-white border-2 border-retro-dark text-gray-600 font-bold py-3 text-xs uppercase font-mono shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Otro Mundial 🔄</button>

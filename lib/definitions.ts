@@ -59,7 +59,7 @@ export interface LineupState {
 }
 
 /**
- * Estado global de una sesión/partida del Torneo de Futgames.
+ * Estado global de una sesión/partida del Torneo de Footgames.
  * Ideal para manejar el estado centralizado (React Context / useReducer).
  */
 export interface TournamentGameState {

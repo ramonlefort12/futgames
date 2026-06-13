@@ -42,10 +42,10 @@ export function useKonamiCode() {
           // 4. Manipulación del DOM perimetral para inyectar/remover la clase retro global
           if (nextState) {
             document.documentElement.classList.add('retro-mode');
-            console.log('🎮 [FUTGAMES LOG]: Código Konami activado. Iniciando emulación gráfica de 8 bits.');
+            console.log('🎮 [FOOTGAMES LOG]: Código Konami activado. Iniciando emulación gráfica de 8 bits.');
           } else {
             document.documentElement.classList.remove('retro-mode');
-            console.log('🎮 [FUTGAMES LOG]: Código Konami desactivado. Volviendo a UI Cyber-Pitch.');
+            console.log('🎮 [FOOTGAMES LOG]: Código Konami desactivado. Volviendo a UI Cyber-Pitch.');
           }
           
           return nextState;

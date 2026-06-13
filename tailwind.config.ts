@@ -20,6 +20,11 @@ const config: Config = {
       borderWidth: {
         '3': '3px',
       },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],
+        display: ['var(--font-syne)', 'Impact', 'sans-serif'], // Tu fuente retro
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
     },
   },
   plugins: [],

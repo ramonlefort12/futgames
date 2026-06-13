@@ -145,7 +145,7 @@ export default function ClientGridPage({ initialPlayers, initialCountries, initi
         <div className="grid grid-cols-4 gap-2 w-full aspect-square bg-white border-2 border-retro-dark rounded-none p-2 relative shadow-[4px_4px_0px_0px_rgba(17,24,39,1)]">
           
           <div className="flex items-center justify-center text-[9px] font-mono text-retro-dark font-bold uppercase">
-            futgames
+            footgames
           </div>
 
           {cols.map((col) => (
