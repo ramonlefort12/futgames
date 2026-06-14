@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Player } from '@/lib/definitions';
 import PlayerCard from '@/components/PlayerCard';
+import AdSenseScript from './AdSenseScript';
 
 interface ClientHigherLowerPageProps {
   initialPlayers: Player[];
@@ -78,6 +79,7 @@ export default function ClientHigherLowerPage({ initialPlayers }: ClientHigherLo
 
   return (
     <div className="min-h-screen bg-retro-cream text-retro-dark p-4 md:p-6 flex flex-col items-center justify-center">
+      <AdSenseScript />
       <div className="w-full max-w-2xl flex flex-col items-center">
 
         <header className="text-center mb-6">

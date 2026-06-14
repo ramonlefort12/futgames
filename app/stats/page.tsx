@@ -2,6 +2,7 @@
 import { getCountryStats } from '@/app/lib/data';
 import { CountryStat } from '@/lib/definitions';
 import StatsSearch from './StatsSearch';
+import AdSenseScript from '@/components/AdSenseScript';
 
 // Forzamos la revalidación dinámica
 export const revalidate = 0;
@@ -31,7 +32,7 @@ export default async function StatsPage({
 
   return (
     <div className="min-h-screen bg-retro-cream text-retro-dark p-4 md:p-8 flex flex-col items-center">
-      
+      <AdSenseScript />
       <div className="w-full max-w-xl flex flex-col">
 
         <header className="mb-6">
