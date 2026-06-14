@@ -2,8 +2,10 @@
 import '@/app/ui/global.css';
 import { inter, syne } from '@/app/ui/fonts';
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import KonamiProvider from '@/components/KonamiProvider';
 import Link from 'next/link';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 // API Nativa de Next.js para SEO (Solo funciona en Server Components)
 export const metadata = {
@@ -22,8 +24,9 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.className} ${syne.variable}`}>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-7536584632020794"></meta>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536584632020794" crossOrigin="anonymous"></script>
-      </head>
+        </head>
       <body className={`font-sans antialiased bg-retro-cream min-h-screen flex flex-col`}>
         
         {/* Inyectamos la lógica del cliente sin afectar al servidor */}
@@ -71,6 +74,8 @@ export default function RootLayout({
         </div>
 
         <Analytics />
+        <SpeedInsights />
+        <GoogleAnalytics gaId="G-D11E46NZRV" />
       </body>
     </html>
   );
