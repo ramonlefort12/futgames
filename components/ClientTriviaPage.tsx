@@ -4,6 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Player, Country } from '@/lib/definitions';
+import AdSenseScript from './AdSenseScript';
 
 interface ClientTriviaPageProps {
   initialCountries: Record<string, Country>;
@@ -120,6 +121,7 @@ export default function ClientTriviaPage({ initialCountries, initialPlayers }: C
 
   return (
     <div className="min-h-screen bg-retro-cream text-retro-dark p-4 md:p-6 flex flex-col items-center">
+      <AdSenseScript />
       <div className="w-full max-w-md flex flex-col">
 
         <header className="mb-6">

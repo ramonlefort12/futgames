@@ -2,9 +2,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { Player, Country } from '@/lib/definitions';
 import PlayerCard from '@/components/PlayerCard';
+import AdSenseScript from '@/components/AdSenseScript';
 
 interface GridCriteria {
   id: string;
@@ -112,6 +112,7 @@ export default function ClientGridPage({ initialPlayers, initialCountries, initi
 
   return (
     <div className="min-h-screen bg-retro-cream text-retro-dark p-4 md:p-6 flex flex-col items-center">
+      <AdSenseScript />
       <div className="w-full max-w-md flex flex-col">
 
         <header className="mb-6">

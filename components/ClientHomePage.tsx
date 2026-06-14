@@ -8,8 +8,8 @@ import TournamentSummaryCard from '@/components/TournamentSummaryCard';
 import PlayerCard from '@/components/PlayerCard';
 import { useTournaments, FORMATIONS, FormationType } from '@/hooks/useTournament';
 import { Country, Player, RivalTeam } from '@/lib/definitions';
-import AdBanner from './AdBanner';
 import { useExportAsImage } from '@/hooks/useExportAsImage';
+import AdSenseScript from './AdSenseScript';
 
 interface ClientHomePageProps {
   initialCountries: Country[];
@@ -77,6 +77,7 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
 
   return (
     <main className="min-h-screen text-retro-dark flex flex-col md:flex-row justify-center p-4 pb-32 md:p-6 select-none relative gap-6">
+      <AdSenseScript />
 
       {/* REFERENCIAS OCULTAS PARA EXPORTACIÓN HTML2IMAGE */}
       <div className="w-0 h-0 overflow-hidden opacity-0 pointer-events-none absolute">

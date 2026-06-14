@@ -1,0 +1,5 @@
+# robots.txt en el directorio public/
+User-agent: *
+Disallow: /api/
+Disallow: /auth/
+Disallow: /search/
