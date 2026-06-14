@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.className} ${syne.variable}`}>
       <head>
+        <meta name="google-site-verification" content="_wIHNYeR60NqiuE_14apMorI3Fo-UCXtJtY17G7PXUQ" />
         </head>
       <body className={`font-sans antialiased bg-retro-cream min-h-screen flex flex-col`}>
         
