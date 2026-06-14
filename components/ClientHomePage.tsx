@@ -387,7 +387,7 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
                 )}
                 {game.tournamentStatus === 'ELIMINATED' && (
                   <div className="w-full text-center p-4 bg-retro-red text-retro-cream border-3 border-retro-dark font-bold text-sm uppercase tracking-wider mb-5 shadow-[4px_4px_0px_0px_rgba(17,24,39,1)]">
-                    ❌ Eliminado de la competición
+                    Eliminado de la competición
                   </div>
                 )}
 
@@ -400,12 +400,12 @@ export default function ClientHomePage({ initialCountries, initialPlayers, initi
                   ) : (
                     <>
                       <div className="grid grid-cols-2 gap-3 w-full">
-                        <button onClick={() => useExportAsImage('bloque1', 'lineup.png')} className="bg-white border-2 border-retro-dark text-retro-dark font-bold text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">📸 Guardar Alineación</button>
-                        <button onClick={() => useExportAsImage('bloque2', 'stats.png')} className="bg-retro-yellow border-2 border-retro-dark text-retro-dark font-extrabold text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">📊 Ficha Técnica</button>
+                        <button onClick={() => useExportAsImage('bloque1', 'lineup.png')} className="bg-white border-2 border-retro-dark text-retro-dark font-bold text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Guardar Alineación</button>
+                        <button onClick={() => useExportAsImage('bloque2', 'stats.png')} className="bg-retro-yellow border-2 border-retro-dark text-retro-dark font-extrabold text-[10px] font-mono uppercase shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Estadísticas</button>
                       </div>
                       <div className="w-full grid grid-cols-2 gap-3">
-                        <button onClick={() => { game.initTournamentStructure(); setSetupMode('SETUP'); }} className="bg-white border-2 border-retro-dark text-gray-600 font-bold py-3 text-xs uppercase font-mono shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Otro Mundial 🔄</button>
-                        <button onClick={() => game.setView('PLAY')} className="bg-retro-green border-2 border-retro-dark text-retro-cream font-bold py-3 text-xs uppercase font-mono shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Rehacer Equipo Stadium</button>
+                        <button onClick={() => { game.initTournamentStructure(); setSetupMode('SETUP'); }} className="bg-white border-2 border-retro-dark text-gray-600 font-bold py-3 text-xs uppercase font-mono shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Repetir Mundial</button>
+                        <button onClick={() => game.setView('PLAY')} className="bg-retro-green border-2 border-retro-dark text-retro-cream font-bold py-3 text-xs uppercase font-mono shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] active:translate-y-0.5">Reiniciar Equipo</button>
                       </div>
                     </>
                   )}

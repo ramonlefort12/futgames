@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import KonamiProvider from '@/components/KonamiProvider';
 import Link from 'next/link';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 // API Nativa de Next.js para SEO (Solo funciona en Server Components)
 export const metadata = {
@@ -74,6 +75,7 @@ export default function RootLayout({
 
         <Analytics />
         <SpeedInsights />
+        <GoogleAnalytics gaId="G-D11E46NZRV" />
       </body>
     </html>
   );
